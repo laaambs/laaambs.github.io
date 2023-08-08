@@ -1,0 +1,359 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>GNN: Graph Neural Networks | Sunset's Citywalk</title><meta name="author" content="Sunset"><meta name="copyright" content="Sunset"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="GNN: Graph Neural Networks 《An gentle introduction to graph neural networks》 ——GNN被用于处理图结构的数据；图结构数据如何表示为tensor；GNN如何处理图数据；GNN网络是由什么模块组成；背后的思想是什么 《Understanding Convolutions on Graphs》 ——讲解Images上的卷积是如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GNN: Graph Neural Networks">
+<meta property="og:url" content="https://laaambs.github.io/2023/08/08/GNN-Graph-Neural-Networks/index.html">
+<meta property="og:site_name" content="Sunset&#39;s Citywalk">
+<meta property="og:description" content="GNN: Graph Neural Networks 《An gentle introduction to graph neural networks》 ——GNN被用于处理图结构的数据；图结构数据如何表示为tensor；GNN如何处理图数据；GNN网络是由什么模块组成；背后的思想是什么 《Understanding Convolutions on Graphs》 ——讲解Images上的卷积是如">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://laaambs.github.io/images/cover.jpg">
+<meta property="article:published_time" content="2023-08-08T06:57:01.000Z">
+<meta property="article:modified_time" content="2023-08-08T07:12:02.657Z">
+<meta property="article:author" content="Sunset">
+<meta property="article:tag" content="GNN">
+<meta property="article:tag" content="李沐">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://laaambs.github.io/images/cover.jpg"><link rel="shortcut icon" href="/images/coffee_shop.png"><link rel="canonical" href="https://laaambs.github.io/2023/08/08/GNN-Graph-Neural-Networks/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Sunset","link":"链接: ","source":"来源: Sunset's Citywalk","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'mediumZoom',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'GNN: Graph Neural Networks',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-08 15:12:02'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/rabbit.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/cover.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Sunset's Citywalk"><img class="site-icon" src="/images/coffee_shop.png"/><span class="site-name">Sunset's Citywalk</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">GNN: Graph Neural Networks</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-08T06:57:01.000Z" title="发表于 2023-08-08 14:57:01">2023-08-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-08-08T07:12:02.657Z" title="更新于 2023-08-08 15:12:02">2023-08-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B2%90%E7%A5%9E%E5%BC%80%E7%BB%84%E4%BC%9A/">沐神开组会</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="GNN: Graph Neural Networks"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="GNN-Graph-Neural-Networks"><a href="#GNN-Graph-Neural-Networks" class="headerlink" title="GNN: Graph Neural Networks"></a>GNN: Graph Neural Networks</h2><blockquote>
+<p>《An gentle introduction to graph neural networks》</p>
+<p>——GNN被用于处理图结构的数据；图结构数据如何表示为tensor；GNN如何处理图数据；GNN网络是由什么模块组成；背后的思想是什么</p>
+<p>《Understanding Convolutions on Graphs》</p>
+<p>——讲解Images上的卷积是如何泛化到Graphs上的卷积的。</p>
+</blockquote>
+<h3 id="Table-content："><a href="#Table-content：" class="headerlink" title="Table content："></a>Table content：</h3><ol>
+<li><p>what kind of data is phrased as a graph</p>
+</li>
+<li><p>Difference between graphs and other types of data</p>
+</li>
+<li><p>Building a morden GNN</p>
+</li>
+<li><p>A GNN playground with real-world task and dataset</p>
+</li>
+</ol>
+<h3 id="1-Introduction-to-Graphs"><a href="#1-Introduction-to-Graphs" class="headerlink" title="1. Introduction to Graphs"></a>1. Introduction to Graphs</h3><ul>
+<li>A graph represents the relations(edges) between a collection of entities(nodes). 一般来说，一个图可以表示为V、E和U，如下所示：</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719111108017.png" alt="image-20230719111108017"></p>
+<p>——其中，attributes表示每个节点、每条边、整个图所表示的<strong>信息</strong>。为了进一步定量地表示这些信息，我们可以用（不同维度的）向量来表示每个节点、每条边、整个图所表示的<strong>信息</strong>。如下所示：</p>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719111437197.png" alt="image-20230719111437197"></p>
+<p>——其中，左上角的节点的信息用一个长度为6的向量表示，高矮表示特征值的大小。重点在于，这些向量能否很好地定量表示图的信息，<strong>GNN要如何学习到这些向量</strong>。</p>
+<ul>
+<li>根据edge是否有方向，可以将graph分为directed graph和undirected graph，如下所示：</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719112047988.png" alt="image-20230719112047988"></p>
+<h3 id="2-Represent-Data-as-Graphs"><a href="#2-Represent-Data-as-Graphs" class="headerlink" title="2. Represent Data as Graphs"></a>2. Represent Data as Graphs</h3><h4 id="Images-as-Graphs"><a href="#Images-as-Graphs" class="headerlink" title="Images as Graphs"></a>Images as Graphs</h4><ul>
+<li>Typically，我们将images表示为带通道的矩阵，即三维tensor(eg. 224*224*3)</li>
+<li>将images表示为整齐的graph：<ul>
+<li>每个pixel看作一个节点</li>
+<li>每个pixel的RGB值形成一个三维向量，作为该节点的向量表示</li>
+<li>每个pixel与邻接pixel之间形成边(<strong>undirected</strong>)。这样每个non-border pixel都有8个邻居节点。</li>
+<li>如何表示边？❤</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719114043583.png" alt="image-20230719114043583"></p>
+<ul>
+<li>image的三种表示，依次为：图片像素值、邻接矩阵（大小为nodes*nodes）、graph</li>
+</ul>
+<h4 id="Texts-as-Graphs"><a href="#Texts-as-Graphs" class="headerlink" title="Texts as Graphs"></a>Texts as Graphs</h4><ul>
+<li><p>Typically，我们将一段文本划分为token，将每个token映射为索引，然后将这段文本表示为索引序列。</p>
+</li>
+<li><p>将text表示为graph：</p>
+<ul>
+<li>每个token作为一个节点，词向量可以作为节点向量</li>
+<li>text sequence是一个单向的序列，因此其中的边是有向边；每个非结尾的token应该有一条有向边指向与其相邻的下一个token</li>
+<li>如何表示边？❤</li>
+</ul>
+</li>
+</ul>
+<h4 id="Graph-valued-Data-in-the-Wild"><a href="#Graph-valued-Data-in-the-Wild" class="headerlink" title="Graph-valued Data in the Wild"></a>Graph-valued Data in the Wild</h4><ul>
+<li>text和image通常不会表示成graph，因为text和image本身已经是非常规则的数据了，表示成graph时，其邻接矩阵会非常稀疏，比如image的邻接矩阵是带状，而text的邻接矩阵是对角线</li>
+<li>而有些数据，很难用除了graph以外的数据形式来表示</li>
+<li>分子图：每个原子作为一个节点，原子间的化学键作为边</li>
+<li>社交网络图：每个人作为一个节点，如果两个人之间有交互行为，则在这两个点之间构建一条边</li>
+<li>引用图：每篇论文作为一个节点，论文A引用论文B则有一条A到B的有向边</li>
+</ul>
+<h3 id="3-Different-Tasks-on-Graphs：Problems"><a href="#3-Different-Tasks-on-Graphs：Problems" class="headerlink" title="3. Different Tasks on Graphs：Problems"></a>3. Different Tasks on Graphs：Problems</h3><h4 id="Graph-level-task"><a href="#Graph-level-task" class="headerlink" title="Graph-level task"></a>Graph-level task</h4><ul>
+<li>在图级别任务中，我们的目标是<strong>预测整个图的属性</strong>。例如，对于以图形表示的分子，我们可能想要预测分子的气味，或者它是否会结合到与疾病相关的受体上。(classification)</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720113247688.png" alt="image-20230720113247688"></p>
+<h4 id="Node-level-task"><a href="#Node-level-task" class="headerlink" title="Node-level task"></a>Node-level task</h4><ul>
+<li>节点级任务关注于<strong>预测图中每个节点的身份或角色</strong>。</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720113727209.png" alt="image-20230720113727209"></p>
+<ul>
+<li>按照图像类比，节点级预测问题类似于图像分割，我们试图标记图像中每个像素的作用。对于文本，类似的任务是预测句子中每个单词的词性。(细粒度的classfication)</li>
+</ul>
+<h4 id="Edge-level-task"><a href="#Edge-level-task" class="headerlink" title="Edge-level task"></a>Edge-level task</h4><ul>
+<li>边级别任务关注于<strong>预测节点之间是否有边存在，以及边的属性如何</strong>，即预测nodes之间是否存在关系，存在哪种关系。</li>
+<li>一个具体的例子是图片场景理解，要判断节点之间的关系，可以先给定包含所有结点的全连接图，然后根据模型对边的预测值来修剪边，得到稀疏的图：</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720114134124.png" alt="image-20230720114134124"></p>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720114214671.png" alt="image-20230720114214671"></p>
+<p>如何用GNN解决different tasks on graph?</p>
+<ol>
+<li>如何把graph表示为tensor，与neural network兼容</li>
+<li>如何设计GNN来处理表示graph的tensor</li>
+<li>GNN的不同模块对prediction起到什么作用</li>
+</ol>
+<h3 id="4-Represent-Graphs-as-Tensors"><a href="#4-Represent-Graphs-as-Tensors" class="headerlink" title="4. Represent Graphs as Tensors"></a>4. Represent Graphs as Tensors</h3><blockquote>
+<p>So, how do we go about solving these different graph tasks with neural networks? The first step is to think about how we will represent graphs to be compatible with neural networks.</p>
+</blockquote>
+<ul>
+<li>Graphs have up to four types of information that we will potentially want to use to make predictions: <strong>nodes, edges, global-context and connectivity.</strong></li>
+<li>The first three are relatively straightforward: for example, with nodes we can form a node feature matrix $N$ by assigning each node an index $i$ and storing the feature for $node_i$ in $N$.</li>
+<li>But, these matrices have a variable number of examples.</li>
+<li><p><strong>Representing a graph’s connectivity</strong> is more complicated.</p>
+<ul>
+<li><p>use an adjacency matrix：</p>
+<ul>
+<li>easily tensorisable</li>
+<li>leads to very sparse adjacency matrices, which are space-inefficient</li>
+<li>not permutation invariant（many adjacency matrices that can encode the same connectivity）</li>
+</ul>
+</li>
+<li><p>use an adjacency lists：</p>
+<ul>
+<li>avoid computation and storage on the disconnected parts of the graph</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230725220911217.png" alt="image-20230725220911217"></p>
+<ul>
+<li>It should be noted that the figure uses scalar values per node/edge/global, but most practical tensor representations have vectors per graph attribute.</li>
+</ul>
+<h3 id="5-Graph-Neural-Network"><a href="#5-Graph-Neural-Network" class="headerlink" title="5. Graph Neural Network"></a>5. Graph Neural Network</h3><ul>
+<li><strong>A GNN is an optimizable transformation on all attributes of the graph (nodes, edges, global-context) that preserves graph symmetries.</strong></li>
+<li>GNNs adopt <strong>a “graph-in, graph-out” architecture</strong> meaning that these model types accept a graph as input, with information loaded into its nodes, edges and global-context, and progressively transform these embeddings, without changing the connectivity of the input graph.</li>
+</ul>
+<h4 id="The-simplest-GNN"><a href="#The-simplest-GNN" class="headerlink" title="The simplest GNN"></a>The simplest GNN</h4><ul>
+<li>The simplest GNN architecture, one where we learn new embeddings for all graph attributes (nodes, edges, global), but where we do not yet use the connectivity of the graph.</li>
+<li>This GNN uses <strong>a separate multilayer perceptron (MLP) on each component of a graph</strong>; we call this a GNN layer. Layer $N$ of this GNN includes $f<em>{U_n}, f</em>{V<em>n}, f</em>{E_n}$.</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726094537247.png" alt="image-20230726094537247"></p>
+<ul>
+<li>As is common with neural networks modules or layers, we can <strong>stack these GNN layers</strong> together. (需要pooling层，否则MLP堆叠没有意义)</li>
+<li>Because a GNN does <strong>not update the connectivity of the input graph</strong>, we can describe the output graph of a GNN with the same adjacency list and the same number of feature vectors as the input graph.</li>
+</ul>
+<h4 id="GNN-Predictions-by-Pooling-Information"><a href="#GNN-Predictions-by-Pooling-Information" class="headerlink" title="GNN Predictions by Pooling Information"></a>GNN Predictions by Pooling Information</h4><ul>
+<li>使用上述的GNN model来解决tasks，比如一个nodel-level的binary classification</li>
+<li>直观的，因为graph中包含了每个node的embedding，我们可以用final layer输出的graph信息，将每个node embedding投入一个linear classifier，获得分类结果，如下图：</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726095501604.png" alt="image-20230726095501604"></p>
+<ul>
+<li>但如果我们没有node embeddings（或出于某种原因不能使用），只能用相关的其他信息，比如edges embeddings来解决node-level binary classification任务，then we need a way to <strong>collect information from edges and give them to nodes for prediction</strong>. We can do this by <strong><em>pooling</em></strong>.</li>
+<li>Pooling proceeds in two steps: <strong><em>gather</em></strong> and <strong><em>aggregated</em></strong>.</li>
+<li>We represent the <em>pooling</em> operation by the letter $\rho$, and denote that we are gathering information from edges to nodes as $\rho<em>{E_n\rightarrow V</em>{n}}$.</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726100842458.png" alt="image-20230726100842458"></p>
+<ul>
+<li>这里节点明明只有两条邻接边，为什么gather的embedding有3个？❤</li>
+<li>Pool edge embeddings into nodes to make nodel-level predictions, denoted as $\rho<em>{E_n\rightarrow V</em>{n}}$:</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726101108039.png" alt="image-20230726101108039"></p>
+<ul>
+<li>Pool node embeddings into edges to make edge-level predictions, denoted as $\rho<em>{V_n\rightarrow E</em>{n}}$:</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726101323227.png" alt="image-20230726101323227"></p>
+<ul>
+<li>Pool node/edge embeddings into global context to make global predictions, denoted as $\rho<em>{V_n\rightarrow U</em>{n}}$：节点矩阵到global embeddings的具体汇聚操作是什么？如果二者的维度不一致呢❤</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726104148023.png" alt="image-20230726104148023"></p>
+<ul>
+<li>End-to-end Simplest GNN：</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726104508078.png" alt="image-20230726104508078"></p>
+<ul>
+<li><p>Note that in this simplest GNN formulation, we’re not using the connectivity of the graph at all inside the GNN layer. We only use connectivity when pooling information for prediction. This pooling technique will serve as a building block for constructing more sophisticated GNN models.</p>
+</li>
+<li><p>如何在GNN中构建使用connectivity信息的模块？使用Pool或者message pass。两者的区别在于，pool是不同的attributes，相邻的entity之间进行信息传递；message pass是相同的attribute，相邻的entity之间进行信息传递。how to apply pool or message pass within GNN layer ❤</p>
+</li>
+</ul>
+<h4 id="Passing-messages-between-parts-of-the-graph"><a href="#Passing-messages-between-parts-of-the-graph" class="headerlink" title="Passing messages between parts of the graph"></a>Passing messages between parts of the graph</h4><ul>
+<li>In order to make our learned embeddings aware of graph connectivity，we can do this by using <em>message passing</em>, where neighboring nodes or edges exchange information and influence each other’s updated embeddings.</li>
+<li>Message passing works in three steps: <strong><em>gather</em></strong>($g$), <strong><em>aggregate</em></strong> and <strong><em>update</em></strong>. This sequence of operations, when applied once, is the simplest type of <strong>message-passing GNN layer</strong>.</li>
+<li>Node-message-passing GNN layer：</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726110637076.png" alt="image-20230726110637076"></p>
+<ul>
+<li><p>This is reminiscent of standard convolution: in essence, <strong><em>message passing and convolution are operations to aggregate and process the information of an element’s neighbors in order to update the element’s value</em></strong>. In graphs, the element is a node, and in images, the element is a pixel. However, the number of neighboring nodes in a graph can be variable, unlike in an image where each pixel has a set number of neighboring elements.</p>
+</li>
+<li><p>By <strong><em>stacking message passing GNN layers</em></strong> together, <strong><em>a node can eventually incorporate information from across the entire graph</em></strong>: after three layers, a node has information about the nodes three steps away from it. 就像感受野一样，最终可以获得全局图片的信息。</p>
+</li>
+</ul>
+<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726111530116.png" alt="image-20230726111530116"></p>
+<ul>
+<li>graph convolutional layer是什么？是主要指embedding transformation，message-passing或pooling操作可以嵌入其中吗？❤</li>
+</ul>
+<h3 id="GNN-playground"><a href="#GNN-playground" class="headerlink" title="GNN playground"></a>GNN playground</h3><h4 id="1-Task"><a href="#1-Task" class="headerlink" title="1. Task"></a>1. Task</h4><ul>
+<li>a graph-level prediction task</li>
+<li>we consider only a single binary label per molecule, classifying if a molecular graph smells “pungent” or not, as labeled by a professional perfumer. </li>
+</ul>
+<h4 id="2-Dataset"><a href="#2-Dataset" class="headerlink" title="2. Dataset"></a>2. Dataset</h4><ul>
+<li><p>Leffingwell Odor Dataset, which is composed of molecules with associated odor percepts (labels)</p>
+</li>
+<li><p>We represent each molecule as a graph, where <strong>atoms are nodes</strong> containing <strong>a one-hot encoding</strong> for its atomic identity (Carbon, Nitrogen, Oxygen, Fluorine) and <strong>bonds are edges</strong> containing <strong>a one-hot encoding</strong> its bond type (single, double, triple or aromatic)</p>
+</li>
+</ul>
+<h4 id="3-Model"><a href="#3-Model" class="headerlink" title="3. Model"></a>3. Model</h4><ul>
+<li>model template: use sequential GNN layers, followed by a linear model with a sigmoid activation for classification</li>
+<li>levers that can customize the model:<ul>
+<li>The number of GNN layers, also called the <em>depth</em>.</li>
+<li>The dimensionality of each attribute when updated. The update function is a 1-layer MLP with a relu activation function and a layer norm for normalization of activations.</li>
+<li>The aggregation function used in pooling: max, mean or sum.</li>
+<li>The graph attributes that get updated, or styles of message passing: nodes, edges and global representation. We control these via boolean toggles (on or off). A baseline model would be a graph-independent GNN (all message-passing off) which aggregates all data at the end into a single global attribute. Toggling on all message-passing functions yields a GraphNets architecture.</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://laaambs.github.io">Sunset</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://laaambs.github.io/2023/08/08/GNN-Graph-Neural-Networks/">https://laaambs.github.io/2023/08/08/GNN-Graph-Neural-Networks/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://laaambs.github.io" target="_blank">Sunset's Citywalk</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN/">GNN</a><a class="post-meta__tags" href="/tags/%E6%9D%8E%E6%B2%90/">李沐</a></div><div class="post_share"><div class="social-share" data-image="/images/cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/2023/08/07/Sunset-s-Citywalk/" title="Sunset's Citywalk"><img class="cover" src="/images/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Sunset's Citywalk</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/rabbit.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Sunset</div><div class="author-info__description">Fight for your faiytale.❤</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/laaambs"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/laaambs" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:894699297@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#GNN-Graph-Neural-Networks"><span class="toc-number">1.</span> <span class="toc-text">GNN: Graph Neural Networks</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Table-content%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">Table content：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Introduction-to-Graphs"><span class="toc-number">1.2.</span> <span class="toc-text">1. Introduction to Graphs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Represent-Data-as-Graphs"><span class="toc-number">1.3.</span> <span class="toc-text">2. Represent Data as Graphs</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Images-as-Graphs"><span class="toc-number">1.3.1.</span> <span class="toc-text">Images as Graphs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Texts-as-Graphs"><span class="toc-number">1.3.2.</span> <span class="toc-text">Texts as Graphs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Graph-valued-Data-in-the-Wild"><span class="toc-number">1.3.3.</span> <span class="toc-text">Graph-valued Data in the Wild</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Different-Tasks-on-Graphs%EF%BC%9AProblems"><span class="toc-number">1.4.</span> <span class="toc-text">3. Different Tasks on Graphs：Problems</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Graph-level-task"><span class="toc-number">1.4.1.</span> <span class="toc-text">Graph-level task</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Node-level-task"><span class="toc-number">1.4.2.</span> <span class="toc-text">Node-level task</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Edge-level-task"><span class="toc-number">1.4.3.</span> <span class="toc-text">Edge-level task</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Represent-Graphs-as-Tensors"><span class="toc-number">1.5.</span> <span class="toc-text">4. Represent Graphs as Tensors</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Graph-Neural-Network"><span class="toc-number">1.6.</span> <span class="toc-text">5. Graph Neural Network</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#The-simplest-GNN"><span class="toc-number">1.6.1.</span> <span class="toc-text">The simplest GNN</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GNN-Predictions-by-Pooling-Information"><span class="toc-number">1.6.2.</span> <span class="toc-text">GNN Predictions by Pooling Information</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Passing-messages-between-parts-of-the-graph"><span class="toc-number">1.6.3.</span> <span class="toc-text">Passing messages between parts of the graph</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GNN-playground"><span class="toc-number">1.7.</span> <span class="toc-text">GNN playground</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Task"><span class="toc-number">1.7.1.</span> <span class="toc-text">1. Task</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Dataset"><span class="toc-number">1.7.2.</span> <span class="toc-text">2. Dataset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Model"><span class="toc-number">1.7.3.</span> <span class="toc-text">3. Model</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/images/cover.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 By Sunset</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
