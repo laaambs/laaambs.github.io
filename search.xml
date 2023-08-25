@@ -3,56 +3,64 @@
   <entry>
     <title>Attention Is All You Need</title>
     <url>/2023/08/18/Attention-Is-All-You-Need/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[
+]]></content>
   </entry>
   <entry>
     <title>CV上分思路和技巧</title>
     <url>/2023/08/11/CV%E4%B8%8A%E5%88%86%E6%80%9D%E8%B7%AF%E5%92%8C%E6%8A%80%E5%B7%A7/</url>
-    <content><![CDATA[<h1 id="CV上分思路和技巧"><a href="#CV上分思路和技巧" class="headerlink" title="CV上分思路和技巧"></a>CV上分思路和技巧</h1><ul>
-<li><p>修改模型</p>
-</li>
+    <content><![CDATA[<h1 id="cv上分思路和技巧">CV上分思路和技巧</h1>
+<ul>
+<li><p>修改模型</p></li>
 <li><p>修改数据增广方法</p>
 <ul>
 <li>主要分为两类，不改变图片标签的和改变图片标签的</li>
 <li>如果使用改变图片标签的数据增广，那么模型需要更多的epoch训练，可能两倍以上</li>
 <li>mixup的原理其实就是两个图片的pixel以及标签做加权求和</li>
 <li>一般来说，val和test的数据增强可以比train稍微弱一点</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><img src="/images/blogs/CV上分思路和技巧/Snipaste_2023-08-11_11-51-34.png" alt="Snipaste_2023-08-11_11-51-34"></p>
+<figure>
+<img
+src="/images/blogs/CV上分思路和技巧/Snipaste_2023-08-11_11-51-34.png"
+alt="Snipaste_2023-08-11_11-51-34" />
+<figcaption aria-hidden="true">Snipaste_2023-08-11_11-51-34</figcaption>
+</figure>
 <ul>
-<li>修改学习过程的超参数<ul>
+<li>修改学习过程的超参数
+<ul>
 <li>优化器</li>
 <li>学习率，比如使用余弦退火的lr_scheduler</li>
-</ul>
-</li>
-<li>使用模型集成方法<ul>
-<li>Test Time Augmentation<ul>
+</ul></li>
+<li>使用模型集成方法
+<ul>
+<li>Test Time Augmentation
+<ul>
 <li>测试阶段，对样本进行数据增强，然后将未增强样本的结果和增强样本的结果求平均</li>
-</ul>
-</li>
-<li>Snapshot Ensemble/ Stochastic Weight Averaging<ul>
+</ul></li>
+<li>Snapshot Ensemble/ Stochastic Weight Averaging
+<ul>
 <li>在训练过程中保存多个中间权重，测试时使用这些权重一一进行预测，结果求平均</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="/images/blogs/CV上分思路和技巧/Snipaste_2023-08-11_13-56-55.png" alt=""></p>
+<p><img
+src="/images/blogs/CV上分思路和技巧/Snipaste_2023-08-11_13-56-55.png" /></p>
 <ul>
 <li>对测试集使用伪标签，合并训练</li>
 </ul>
-<p><img src="/images/blogs/CV上分思路和技巧/Snipaste_2023-08-11_14-02-08.png" alt=""></p>
+<p><img
+src="/images/blogs/CV上分思路和技巧/Snipaste_2023-08-11_14-02-08.png" /></p>
 <ul>
-<li>使用交叉验证<ul>
+<li>使用交叉验证
+<ul>
 <li>可以用来选择超参数</li>
 <li>也可以用交叉验证训练出的多个模型进行模型集成</li>
 <li>代码如下所示，即从生成dataloader开始，到训练并保存模型，在这部分代码外面套一个循环，循环次数就是K折交叉验证</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><img src="/images/blogs/CV上分思路和技巧/Snipaste_2023-08-11_14-04-50.png" alt=""></p>
+<p><img
+src="/images/blogs/CV上分思路和技巧/Snipaste_2023-08-11_14-04-50.png" /></p>
 ]]></content>
       <categories>
         <category>比赛</category>
@@ -65,74 +73,140 @@
   <entry>
     <title>GAN: Generative Adversarial Nets</title>
     <url>/2023/08/10/GAN-Generative-Adversarial-Nets/</url>
-    <content><![CDATA[<h1 id="GAN-Generative-Adversarial-Nets"><a href="#GAN-Generative-Adversarial-Nets" class="headerlink" title="GAN: Generative Adversarial Nets"></a>GAN: Generative Adversarial Nets</h1><h2 id="1-标题及作者"><a href="#1-标题及作者" class="headerlink" title="1. 标题及作者"></a>1. 标题及作者</h2><ul>
-<li>模型的两大类：判别模型，生成模型<ul>
+    <content><![CDATA[<h1 id="gan-generative-adversarial-nets">GAN: Generative Adversarial
+Nets</h1>
+<h2 id="标题及作者">1. 标题及作者</h2>
+<ul>
+<li>模型的两大类：判别模型，生成模型
+<ul>
 <li>判别模型：预测、分类。</li>
 <li>生成模型：世界是通过采样不同的分布形成的，如果你要生成某个数据，就是要在它的分布上进行采样。所以生成模型的目标就是拟合到某种数据的分布。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h2 id="2-摘要"><a href="#2-摘要" class="headerlink" title="2. 摘要"></a>2. 摘要</h2><p>GAN是通过一个adversial process来预测生成模型。GAN会同时训练两个模型$G$和$D$，生成模型$G$的目标是捕捉到真实的数据分布，判别模型$D$的目标是分辨一个数据是否来自真实的数据分布。训练过程中，$D$的目标是提高分类的准确率，$G$的目标是最大化$D$的错误率。最终使得$G$找到真实的数据分布，即$G$捕捉的数据分布与真实数据分布完全重合，此时$D$对每个输入的预测都为0.5（等于随机预测）。用MLP来构建$G$和$D$，使用反向传播和梯度下降来训练这两个模型，而不使用传统的生成模型算法（如马尔科夫链）。</p>
-<h2 id="3-引言"><a href="#3-引言" class="headerlink" title="3. 引言"></a>3. 引言</h2><h3 id="3-1-Issue"><a href="#3-1-Issue" class="headerlink" title="3.1 Issue"></a>3.1 Issue</h3><ul>
+<h2 id="摘要">2. 摘要</h2>
+<p>GAN是通过一个adversial
+process来预测生成模型。GAN会同时训练两个模型<span
+class="math inline">\(G\)</span>和<span
+class="math inline">\(D\)</span>，生成模型<span
+class="math inline">\(G\)</span>的目标是捕捉到真实的数据分布，判别模型<span
+class="math inline">\(D\)</span>的目标是分辨一个数据是否来自真实的数据分布。训练过程中，<span
+class="math inline">\(D\)</span>的目标是提高分类的准确率，<span
+class="math inline">\(G\)</span>的目标是最大化<span
+class="math inline">\(D\)</span>的错误率。最终使得<span
+class="math inline">\(G\)</span>找到真实的数据分布，即<span
+class="math inline">\(G\)</span>捕捉的数据分布与真实数据分布完全重合，此时<span
+class="math inline">\(D\)</span>对每个输入的预测都为0.5（等于随机预测）。用MLP来构建<span
+class="math inline">\(G\)</span>和<span
+class="math inline">\(D\)</span>，使用反向传播和梯度下降来训练这两个模型，而不使用传统的生成模型算法（如马尔科夫链）。</p>
+<h2 id="引言">3. 引言</h2>
+<h3 id="issue">3.1 Issue</h3>
+<ul>
 <li>Discriminative model已经取得了很大进展</li>
-<li>但是Generative model还没有取得同样的进展，因为传统方法是要对未知的数据分布进行近似，然后计算似然函数。但是这种近似给计算带来了很多困难。</li>
+<li>但是Generative
+model还没有取得同样的进展，因为传统方法是要对未知的数据分布进行近似，然后计算似然函数。但是这种近似给计算带来了很多困难。</li>
 <li>不使用似然函数了，使用一个对抗策略的框架</li>
 </ul>
-<h3 id="3-2-Framework"><a href="#3-2-Framework" class="headerlink" title="3.2 Framework"></a>3.2 Framework</h3><ul>
-<li><p>framework basisi就是双人对抗，同时训练两个模型，一个负责捕捉真是数据分布，一个负责分辨数据是否来自真实分布，直到生成模型找到真实分布。</p>
-</li>
-<li><p>generative model：是一个MLP，输入是随机噪音（通常属于高斯分布），这个MLP可以将产生噪音的分布映射到我们想要的任何数据的分布上去</p>
-</li>
-<li>discriminative model：也是一个MLP，输入一个数据，输出一个scalar，用于判别输入的数据是否来自真实数据分布</li>
-<li>以上这种G和D都是MLP的special case，称为adversarial nets，在adversarial nets下，可以利用误差的反向传播来训练模型，不需要对数据做复杂采样或对分布做复杂的近似。</li>
+<h3 id="framework">3.2 Framework</h3>
+<ul>
+<li><p>framework
+basisi就是双人对抗，同时训练两个模型，一个负责捕捉真是数据分布，一个负责分辨数据是否来自真实分布，直到生成模型找到真实分布。</p></li>
+<li><p>generative
+model：是一个MLP，输入是随机噪音（通常属于高斯分布），这个MLP可以将产生噪音的分布映射到我们想要的任何数据的分布上去</p></li>
+<li><p>discriminative
+model：也是一个MLP，输入一个数据，输出一个scalar，用于判别输入的数据是否来自真实数据分布</p></li>
+<li><p>以上这种G和D都是MLP的special case，称为adversarial
+nets，在adversarial
+nets下，可以利用误差的反向传播来训练模型，不需要对数据做复杂采样或对分布做复杂的近似。</p></li>
 </ul>
-<h2 id="4-相关工作"><a href="#4-相关工作" class="headerlink" title="4. 相关工作"></a>4. 相关工作</h2><ul>
-<li><p>曾经主流的方法是显式地构建目标数据的概率分布，概率分布中提供一些可学习的参数，然后根据数据样本通过最大化其对数似然函数来学习参数。例如，波兹曼机。</p>
+<h2 id="相关工作">4. 相关工作</h2>
+<ul>
+<li>曾经主流的方法是显式地构建目标数据的概率分布，概率分布中提供一些可学习的参数，然后根据数据样本通过最大化其对数似然函数来学习参数。例如，波兹曼机。
 <ul>
 <li>问题：当数据维度很高时，概率分布难以用最大似然函数来计算，因为计算非常困难；另外，真实数据的分布有时很难构造</li>
-</ul>
-</li>
-<li><p>因此催生了另一类方法：generative machines，不再显式地构造概率分布，而是利用模型去近似概率分布。例如，VAE，NCE。</p>
+</ul></li>
+<li>因此催生了另一类方法：generative
+machines，不再显式地构造概率分布，而是利用模型去近似概率分布。例如，VAE，NCE。
 <ul>
 <li>问题：不能知道数据分布的显式表达，但是可以利用反向传播、梯度下降来更新参数，使计算非常简单。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h2 id="5-模型"><a href="#5-模型" class="headerlink" title="5. 模型"></a>5. 模型</h2><ul>
-<li>generator $G$: 为了让生成器学习数据$x$的分布（生成器学到的分布用$p_g$表示），我们在输入噪音$z$上定义一个先验分布$p_z(z)$（一般是高斯分布），然后通过一个函数$G(z;\theta_g)$表示从先验分布到目标分布的映射，其中$G$是一个可微分函数，GAN中用MLP构建，其参数为$\theta_g$<ul>
-<li>论文中是用scalar来表示$z$和$x$，在实际中，比如生成4k图像时，图像有八百万个像素，每个像素表示为一个随机变量，每个变量都服从一个分布，整个图像服从一个联合分布；如果隐向量$z$设定为100维（超参数，根据生成数据的复杂度而选择，两者不需要相等），那么就需要初始化100个随机变量的分布；最终生成器就是一个初始输入为100维，最终输出为八百万维的MLP。</li>
-</ul>
-</li>
-<li>discriminator $D$: 定义另一个MLP模型$D(x;\theta_d)$，输入为数据$x$，最终输出一个scalar，这个scalar表示$x$来自真实数据分布的概率。</li>
-<li>loss function: <ul>
-<li>同时训练两个模型，对$D$，我们希望它能尽可能地分辨正确$x$是否来自真是数据分布；对$G$，我们希望它生成的数据能尽可能地被$D$判定为真实数据。</li>
-<li>损失函数：<ul>
-<li>先看内部对$D$的max：当$D$达到理想效果时，$D(x)$为1，函数的第一部分为0，$D(G(z))$为0，函数的第二部分为0，求和为0；如果不是理想效果，则函数结果为负。因此为了让$D$达到理想效果，应该让函数尽可能大</li>
-<li>然后看外部对$G$的min：与$G$有关的只有函数的后一项，当$G$达到理想效果时，$D(G(z))$为1，则函数的后一项为负无穷，函数求和为负无穷。因此为了让$G$达到理想效果，应该让函数尽可能小</li>
-<li>损失函数公式如下所示：</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-24-06.png" alt=""></p>
+<h2 id="模型">5. 模型</h2>
 <ul>
-<li>学习过程：<ul>
-<li>如图所示，初始时$D$和$G$的效果都有较大偏差。随后在每次迭代中，$D$先优化，学到真实数据和$G$生成数据的区别；然后$G$优化数据分布，减小$D$的分类准确率。经过多次迭代后，$G$生成数据的分布和真实数据分布完全重合。</li>
+<li>generator <span class="math inline">\(G\)</span>:
+为了让生成器学习数据<span
+class="math inline">\(x\)</span>的分布（生成器学到的分布用<span
+class="math inline">\(p_g\)</span>表示），我们在输入噪音<span
+class="math inline">\(z\)</span>上定义一个先验分布<span
+class="math inline">\(p_z(z)\)</span>（一般是高斯分布），然后通过一个函数<span
+class="math inline">\(G(z;\theta_g)\)</span>表示从先验分布到目标分布的映射，其中<span
+class="math inline">\(G\)</span>是一个可微分函数，GAN中用MLP构建，其参数为<span
+class="math inline">\(\theta_g\)</span>
+<ul>
+<li>论文中是用scalar来表示<span class="math inline">\(z\)</span>和<span
+class="math inline">\(x\)</span>，在实际中，比如生成4k图像时，图像有八百万个像素，每个像素表示为一个随机变量，每个变量都服从一个分布，整个图像服从一个联合分布；如果隐向量<span
+class="math inline">\(z\)</span>设定为100维（超参数，根据生成数据的复杂度而选择，两者不需要相等），那么就需要初始化100个随机变量的分布；最终生成器就是一个初始输入为100维，最终输出为八百万维的MLP。</li>
+</ul></li>
+<li>discriminator <span class="math inline">\(D\)</span>:
+定义另一个MLP模型<span
+class="math inline">\(D(x;\theta_d)\)</span>，输入为数据<span
+class="math inline">\(x\)</span>，最终输出一个scalar，这个scalar表示<span
+class="math inline">\(x\)</span>来自真实数据分布的概率。</li>
+<li>loss function:
+<ul>
+<li>同时训练两个模型，对<span
+class="math inline">\(D\)</span>，我们希望它能尽可能地分辨正确<span
+class="math inline">\(x\)</span>是否来自真是数据分布；对<span
+class="math inline">\(G\)</span>，我们希望它生成的数据能尽可能地被<span
+class="math inline">\(D\)</span>判定为真实数据。</li>
+<li>损失函数：
+<ul>
+<li>先看内部对<span class="math inline">\(D\)</span>的max：当<span
+class="math inline">\(D\)</span>达到理想效果时，<span
+class="math inline">\(D(x)\)</span>为1，函数的第一部分为0，<span
+class="math inline">\(D(G(z))\)</span>为0，函数的第二部分为0，求和为0；如果不是理想效果，则函数结果为负。因此为了让<span
+class="math inline">\(D\)</span>达到理想效果，应该让函数尽可能大</li>
+<li>然后看外部对<span class="math inline">\(G\)</span>的min：与<span
+class="math inline">\(G\)</span>有关的只有函数的后一项，当<span
+class="math inline">\(G\)</span>达到理想效果时，<span
+class="math inline">\(D(G(z))\)</span>为1，则函数的后一项为负无穷，函数求和为负无穷。因此为了让<span
+class="math inline">\(G\)</span>达到理想效果，应该让函数尽可能小</li>
+<li>损失函数公式如下所示：</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
+<p><img
+src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-24-06.png" /></p>
+<ul>
+<li>学习过程：
+<ul>
+<li>如图所示，初始时<span class="math inline">\(D\)</span>和<span
+class="math inline">\(G\)</span>的效果都有较大偏差。随后在每次迭代中，<span
+class="math inline">\(D\)</span>先优化，学到真实数据和<span
+class="math inline">\(G\)</span>生成数据的区别；然后<span
+class="math inline">\(G\)</span>优化数据分布，减小<span
+class="math inline">\(D\)</span>的分类准确率。经过多次迭代后，<span
+class="math inline">\(G\)</span>生成数据的分布和真实数据分布完全重合。</li>
+</ul></li>
 </ul>
-<p><img src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-38-27.png" alt=""></p>
+<p><img
+src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-38-27.png" /></p>
 <ul>
 <li>算法描述：</li>
 </ul>
-<p><img src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-39-19.png" alt=""></p>
-<h2 id="6-优缺点"><a href="#6-优缺点" class="headerlink" title="6. 优缺点"></a>6. 优缺点</h2><ul>
-<li><p>GAN不需要显式地表示数据分布，因而可以利用网络模型拟合非常复杂的数据，计算上也方便很多</p>
-</li>
-<li><p>GAN的训练非常不稳定，因为它需要每次迭代中$G$和$D$的能力相当，不能某个模型的能力过强，否则另一个模型无法收敛；但要求每次迭代时$D$要在当前的$G$模型下分辨能力有优化，否则$G$也无法学到很好的分布；另外，GAN的训练不需要推理，$D$和$G$两个模型是否都收敛了比较难判断。</p>
-</li>
-<li>GAN是半监督学习的灵感之一，因为它的数据生成是无监督的，即数据不需要标记；但损失函数是有监督的，唯一的监督信息是数据来源于真实数据分布还是生成器，而这个监督信息是训练时自己定义的。</li>
+<p><img
+src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-39-19.png" /></p>
+<h2 id="优缺点">6. 优缺点</h2>
+<ul>
+<li><p>GAN不需要显式地表示数据分布，因而可以利用网络模型拟合非常复杂的数据，计算上也方便很多</p></li>
+<li><p>GAN的训练非常不稳定，因为它需要每次迭代中<span
+class="math inline">\(G\)</span>和<span
+class="math inline">\(D\)</span>的能力相当，不能某个模型的能力过强，否则另一个模型无法收敛；但要求每次迭代时<span
+class="math inline">\(D\)</span>要在当前的<span
+class="math inline">\(G\)</span>模型下分辨能力有优化，否则<span
+class="math inline">\(G\)</span>也无法学到很好的分布；另外，GAN的训练不需要推理，<span
+class="math inline">\(D\)</span>和<span
+class="math inline">\(G\)</span>两个模型是否都收敛了比较难判断。</p></li>
+<li><p>GAN是半监督学习的灵感之一，因为它的数据生成是无监督的，即数据不需要标记；但损失函数是有监督的，唯一的监督信息是数据来源于真实数据分布还是生成器，而这个监督信息是训练时自己定义的。</p></li>
 </ul>
 ]]></content>
       <categories>
@@ -146,195 +220,397 @@
   <entry>
     <title>GNN: Graph Neural Networks</title>
     <url>/2023/08/10/GNN-Graph-Neural-Networks/</url>
-    <content><![CDATA[<h1 id="GNN-Graph-Neural-Networks"><a href="#GNN-Graph-Neural-Networks" class="headerlink" title="GNN: Graph Neural Networks"></a>GNN: Graph Neural Networks</h1><blockquote>
+    <content><![CDATA[<h1 id="gnn-graph-neural-networks">GNN: Graph Neural Networks</h1>
+<blockquote>
 <p>《An gentle introduction to graph neural networks》</p>
 <p>——图结构数据如何表示为tensor；GNN如何处理图数据；GNN网络是由什么模块组成</p>
 </blockquote>
-<h2 id="1-Introduction-to-Graphs"><a href="#1-Introduction-to-Graphs" class="headerlink" title="1. Introduction to Graphs"></a>1. Introduction to Graphs</h2><ul>
-<li>A graph represents the relations(edges) between a collection of entities(nodes). 一般来说，一个图可以表示为V、E和U，如下所示：</li>
+<h2 id="introduction-to-graphs">1. Introduction to Graphs</h2>
+<ul>
+<li>A graph represents the relations(edges) between a collection of
+entities(nodes). 一般来说，一个图可以表示为V、E和U，如下所示：</li>
 </ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719111108017.png" alt="image-20230719111108017"></p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719111108017.png"
+alt="image-20230719111108017" />
+<figcaption aria-hidden="true">image-20230719111108017</figcaption>
+</figure>
 <p>——其中，attributes表示每个节点、每条边、整个图所表示的<strong>信息</strong>。为了进一步定量地表示这些信息，我们可以用（不同维度的）向量来表示每个节点、每条边、整个图所表示的<strong>信息</strong>。</p>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719111437197.png" alt="image-20230719111437197"></p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719111437197.png"
+alt="image-20230719111437197" />
+<figcaption aria-hidden="true">image-20230719111437197</figcaption>
+</figure>
 <p>——其中，左上角的节点的信息用一个长度为6的向量表示，高矮表示特征值的大小。重点在于，这些向量能否很好地定量表示图的信息，<strong>GNN要如何学习到这些向量</strong>。</p>
 <ul>
-<li>根据edge是否有方向，可以将graph分为directed graph和undirected graph：</li>
+<li>根据edge是否有方向，可以将graph分为directed graph和undirected
+graph：</li>
 </ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719112047988.png" alt="image-20230719112047988"></p>
-<h2 id="2-Represent-Data-as-Graphs"><a href="#2-Represent-Data-as-Graphs" class="headerlink" title="2. Represent Data as Graphs"></a>2. Represent Data as Graphs</h2><h3 id="Images-as-Graphs"><a href="#Images-as-Graphs" class="headerlink" title="Images as Graphs"></a>Images as Graphs</h3><ul>
-<li>Typically，我们将images表示为带通道的矩阵，即三维tensor(eg. 224*224*3)</li>
-<li>将images表示为整齐的graph：<ul>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719112047988.png"
+alt="image-20230719112047988" />
+<figcaption aria-hidden="true">image-20230719112047988</figcaption>
+</figure>
+<h2 id="represent-data-as-graphs">2. Represent Data as Graphs</h2>
+<h3 id="images-as-graphs">Images as Graphs</h3>
+<ul>
+<li>Typically，我们将images表示为带通道的矩阵，即三维tensor(eg.
+224*224*3)</li>
+<li>将images表示为整齐的graph：
+<ul>
 <li>每个pixel看作一个节点</li>
 <li>每个pixel的RGB值形成一个三维向量，作为该节点的向量表示</li>
-<li>每个pixel与邻接pixel之间形成边(<strong>undirected</strong>)。这样每个non-border pixel都有8个邻居节点。</li>
+<li>每个pixel与邻接pixel之间形成边(<strong>undirected</strong>)。这样每个non-border
+pixel都有8个邻居节点。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719114043583.png" alt="image-20230719114043583"></p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230719114043583.png"
+alt="image-20230719114043583" />
+<figcaption aria-hidden="true">image-20230719114043583</figcaption>
+</figure>
 <ul>
 <li>image的三种表示，依次为：图片像素值、邻接矩阵（大小为nodes*nodes）、graph</li>
 </ul>
-<h3 id="Texts-as-Graphs"><a href="#Texts-as-Graphs" class="headerlink" title="Texts as Graphs"></a>Texts as Graphs</h3><ul>
-<li><p>Typically，我们将一段文本划分为token，将每个token映射为索引，然后将这段文本表示为索引序列。</p>
-</li>
+<h3 id="texts-as-graphs">Texts as Graphs</h3>
+<ul>
+<li><p>Typically，我们将一段文本划分为token，将每个token映射为索引，然后将这段文本表示为索引序列。</p></li>
 <li><p>将text表示为graph：</p>
 <ul>
 <li>每个token作为一个节点，词向量可以作为节点向量</li>
-<li>text sequence是一个单向的序列，因此其中的边是有向边；每个非结尾的token应该有一条有向边指向与其相邻的下一个token</li>
+<li>text
+sequence是一个单向的序列，因此其中的边是有向边；每个非结尾的token应该有一条有向边指向与其相邻的下一个token</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="Graph-valued-Data-in-the-Wild"><a href="#Graph-valued-Data-in-the-Wild" class="headerlink" title="Graph-valued Data in the Wild"></a>Graph-valued Data in the Wild</h3><ul>
+<h3 id="graph-valued-data-in-the-wild">Graph-valued Data in the
+Wild</h3>
+<ul>
 <li>text和image通常不会表示成graph，因为text和image本身已经是非常规则的数据了，表示成graph时，其邻接矩阵会非常稀疏，比如image的邻接矩阵是带状，而text的邻接矩阵是对角线</li>
-<li>而有些数据，很难用除了graph以外的数据形式来表示<ul>
+<li>而有些数据，很难用除了graph以外的数据形式来表示
+<ul>
 <li>分子图：每个原子作为一个节点，原子间的化学键作为边</li>
 <li>社交网络图：每个人作为一个节点，如果两个人之间有交互行为，则在这两个点之间构建一条边</li>
 <li>引用图：每篇论文作为一个节点，论文A引用论文B则有一条A到B的有向边</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h2 id="3-Different-Tasks-on-Graphs"><a href="#3-Different-Tasks-on-Graphs" class="headerlink" title="3. Different Tasks on Graphs"></a>3. Different Tasks on Graphs</h2><h3 id="Graph-level-task"><a href="#Graph-level-task" class="headerlink" title="Graph-level task"></a>Graph-level task</h3><ul>
+<h2 id="different-tasks-on-graphs">3. Different Tasks on Graphs</h2>
+<h3 id="graph-level-task">Graph-level task</h3>
+<ul>
 <li>在图级别任务中，我们的目标是<strong>预测整个图的属性</strong>。例如，对于以graph表示的分子，我们可能想要预测分子的气味，或者它是否会结合到与疾病相关的受体上。(classification)</li>
 </ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720113247688.png" alt="image-20230720113247688"></p>
-<h3 id="Node-level-task"><a href="#Node-level-task" class="headerlink" title="Node-level task"></a>Node-level task</h3><ul>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720113247688.png"
+alt="image-20230720113247688" />
+<figcaption aria-hidden="true">image-20230720113247688</figcaption>
+</figure>
+<h3 id="node-level-task">Node-level task</h3>
+<ul>
 <li>节点级任务关注于<strong>预测图中每个节点的身份或角色</strong>。</li>
 </ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720113727209.png" alt="image-20230720113727209"></p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720113727209.png"
+alt="image-20230720113727209" />
+<figcaption aria-hidden="true">image-20230720113727209</figcaption>
+</figure>
 <ul>
 <li>类比图像，节点级预测问题类似于图像分割，我们试图标记图像中每个像素的作用。对于文本，类似的任务是预测句子中每个单词的词性。(细粒度的classfication)</li>
 </ul>
-<h3 id="Edge-level-task"><a href="#Edge-level-task" class="headerlink" title="Edge-level task"></a>Edge-level task</h3><ul>
+<h3 id="edge-level-task">Edge-level task</h3>
+<ul>
 <li>边级别任务关注于<strong>预测节点之间是否有边存在，以及边的属性如何</strong>，即预测nodes之间是否存在关系，存在哪种关系。</li>
 <li>一个具体的例子是图片场景理解，要判断节点之间的关系，可以先给定包含所有结点的全连接图，然后根据模型对边的预测值来修剪边，得到稀疏的图：</li>
 </ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720114134124.png" alt="image-20230720114134124"></p>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720114214671.png" alt="image-20230720114214671"></p>
-<h2 id="4-Represent-Graphs-as-Tensors"><a href="#4-Represent-Graphs-as-Tensors" class="headerlink" title="4. Represent Graphs as Tensors"></a>4. Represent Graphs as Tensors</h2><blockquote>
-<p>So, how do we go about solving these different graph tasks with neural networks? The first step is to think about how we will represent graphs to be compatible with neural networks.</p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720114134124.png"
+alt="image-20230720114134124" />
+<figcaption aria-hidden="true">image-20230720114134124</figcaption>
+</figure>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230720114214671.png"
+alt="image-20230720114214671" />
+<figcaption aria-hidden="true">image-20230720114214671</figcaption>
+</figure>
+<h2 id="represent-graphs-as-tensors">4. Represent Graphs as Tensors</h2>
+<blockquote>
+<p>So, how do we go about solving these different graph tasks with
+neural networks? The first step is to think about how we will represent
+graphs to be compatible with neural networks.</p>
 </blockquote>
 <ul>
-<li>Graphs have up to four types of information: <strong>nodes, edges, global-context and connectivity.</strong></li>
-<li>The first three are relatively straightforward: for example, with nodes we can form a node feature matrix $N$ by assigning each node an index $i$ and storing the feature for $node_i$ in $N$.</li>
-<li><p><strong>Representing a graph’s connectivity</strong> is more complicated.</p>
+<li>Graphs have up to four types of information: <strong>nodes, edges,
+global-context and connectivity.</strong></li>
+<li>The first three are relatively straightforward: for example, with
+nodes we can form a node feature matrix <span
+class="math inline">\(N\)</span> by assigning each node an index <span
+class="math inline">\(i\)</span> and storing the feature for <span
+class="math inline">\(node_i\)</span> in <span
+class="math inline">\(N\)</span>.</li>
+<li><strong>Representing a graph’s connectivity</strong> is more
+complicated.
 <ul>
-<li><p>use an adjacency matrix：</p>
+<li>use an adjacency matrix：
 <ul>
 <li>easily tensorisable</li>
-<li>leads to very sparse adjacency matrices, which are space-inefficient</li>
-<li>not permutation invariant（many adjacency matrices that can encode the same connectivity）</li>
-</ul>
-</li>
-<li><p>use an adjacency lists：</p>
+<li>leads to very sparse adjacency matrices, which are
+space-inefficient</li>
+<li>not permutation invariant（many adjacency matrices that can encode
+the same connectivity）</li>
+</ul></li>
+<li>use an adjacency lists：
 <ul>
-<li>avoid computation and storage on the disconnected parts of the graph</li>
+<li>avoid computation and storage on the disconnected parts of the
+graph</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230725220911217.png" alt="image-20230725220911217"></p>
-<h2 id="5-Graph-Neural-Network"><a href="#5-Graph-Neural-Network" class="headerlink" title="5. Graph Neural Network"></a>5. Graph Neural Network</h2><blockquote>
-<p>Now we’ve represented graph as tensors, how we use neural network to deal with these tensors?</p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230725220911217.png"
+alt="image-20230725220911217" />
+<figcaption aria-hidden="true">image-20230725220911217</figcaption>
+</figure>
+<h2 id="graph-neural-network">5. Graph Neural Network</h2>
+<blockquote>
+<p>Now we've represented graph as tensors, how we use neural network to
+deal with these tensors?</p>
 </blockquote>
 <ul>
-<li><strong>A GNN is an optimizable transformation on all attributes of the graph (nodes, edges, global-context) that preserves graph symmetries.</strong> 即，GNN就是对属性做变换，但不改变图的结构。</li>
-<li>GNNs adopt <strong>a “graph-in, graph-out” architecture</strong> meaning that these model types accept a graph as input, with information loaded into its nodes, edges and global-context, and progressively transform these embeddings, without changing the connectivity of the input graph.</li>
+<li><strong>A GNN is an optimizable transformation on all attributes of
+the graph (nodes, edges, global-context) that preserves graph
+symmetries.</strong> 即，GNN就是对属性做变换，但不改变图的结构。</li>
+<li>GNNs adopt <strong>a “graph-in, graph-out” architecture</strong>
+meaning that these model types accept a graph as input, with information
+loaded into its nodes, edges and global-context, and progressively
+transform these embeddings, without changing the connectivity of the
+input graph.</li>
 </ul>
-<h3 id="The-simplest-GNN"><a href="#The-simplest-GNN" class="headerlink" title="The simplest GNN"></a>The simplest GNN</h3><ul>
-<li>The simplest GNN architecture, one where we learn new embeddings for all graph attributes (nodes, edges, global), but where we do not yet use the connectivity of the graph.</li>
-<li>This GNN uses <strong>a separate multilayer perceptron (MLP) on each component of a graph</strong>; we call this a GNN layer. Layer $N$ of this GNN includes $f<em>{U_n}, f</em>{V<em>n}, f</em>{E_n}$. 即为了不改变connectivity，我们对node, edge和global-context分别构造一个MLP以对embedding进行转换，这三个MLP构成GNN的一个layer。</li>
-</ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726094537247.png" alt="image-20230726094537247"></p>
+<h3 id="the-simplest-gnn">The simplest GNN</h3>
 <ul>
-<li>We can <strong>stack these GNN layers</strong> together to build a deeper GNN. (需要pooling层，否则MLP堆叠没有意义)</li>
-<li>Because a GNN does <strong>not update the connectivity of the input graph</strong>, we can describe the output graph of a GNN with the same adjacency list and the same number of feature vectors as the input graph.</li>
+<li>The simplest GNN architecture, one where we learn new embeddings for
+all graph attributes (nodes, edges, global), but where we do not yet use
+the connectivity of the graph.</li>
+<li>This GNN uses <strong>a separate multilayer perceptron (MLP) on each
+component of a graph</strong>; we call this a GNN layer. Layer <span
+class="math inline">\(N\)</span> of this GNN includes <span
+class="math inline">\(f_{U_n}, f_{V_n}, f_{E_n}\)</span>.
+即为了不改变connectivity，我们对node,
+edge和global-context分别构造一个MLP以对embedding进行转换，这三个MLP构成GNN的一个layer。</li>
 </ul>
-<h3 id="GNN-Predictions-using-Pooling-Information"><a href="#GNN-Predictions-using-Pooling-Information" class="headerlink" title="GNN Predictions using Pooling Information"></a>GNN Predictions using Pooling Information</h3><blockquote>
-<p>如何用output graph来完成一个nodel-level的binary classification任务呢？</p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726094537247.png"
+alt="image-20230726094537247" />
+<figcaption aria-hidden="true">image-20230726094537247</figcaption>
+</figure>
+<ul>
+<li>We can <strong>stack these GNN layers</strong> together to build a
+deeper GNN. (需要pooling层，否则MLP堆叠没有意义)</li>
+<li>Because a GNN does <strong>not update the connectivity of the input
+graph</strong>, we can describe the output graph of a GNN with the same
+adjacency list and the same number of feature vectors as the input
+graph.</li>
+</ul>
+<h3 id="gnn-predictions-using-pooling-information">GNN Predictions using
+Pooling Information</h3>
+<blockquote>
+<p>如何用output graph来完成一个nodel-level的binary
+classification任务呢？</p>
 </blockquote>
 <ul>
-<li>直观的，因为graph中包含了每个node的embedding，我们可以用final layer输出的graph信息，将每个node embedding投入一个output dimension为2的全连接层，然后进行softmax，获得分类结果：</li>
+<li>直观的，因为graph中包含了每个node的embedding，我们可以用final
+layer输出的graph信息，将每个node embedding投入一个output
+dimension为2的全连接层，然后进行softmax，获得分类结果：</li>
 </ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726095501604.png" alt="image-20230726095501604"></p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726095501604.png"
+alt="image-20230726095501604" />
+<figcaption aria-hidden="true">image-20230726095501604</figcaption>
+</figure>
 <ul>
-<li>但如果我们没有node embeddings（或出于某种原因不能使用），只能用相关的其他信息，比如edges embeddings来解决node-level binary classification任务，then we need a way to <strong>collect information from edges and give them to nodes for prediction</strong>. We can do this by <strong><em>pooling</em></strong>. 无论缺少哪类信息，都可以利用pool操作来汇聚其他类的attribute，弥补缺失的信息</li>
-<li>Pooling proceeds in two steps: <strong><em>gather</em></strong> and <strong><em>aggregated</em></strong>.</li>
-<li>这里对每个结点gather它的邻接边，以及全局信息，然后使用求和sum进行aggregation<ul>
+<li>但如果我们没有node
+embeddings（或出于某种原因不能使用），只能用相关的其他信息，比如edges
+embeddings来解决node-level binary classification任务，then we need a way
+to <strong>collect information from edges and give them to nodes for
+prediction</strong>. We can do this by
+<strong><em>pooling</em></strong>.
+无论缺少哪类信息，都可以利用pool操作来汇聚其他类的attribute，弥补缺失的信息</li>
+<li>Pooling proceeds in two steps: <strong><em>gather</em></strong> and
+<strong><em>aggregated</em></strong>.</li>
+<li>这里对每个结点gather它的邻接边，以及全局信息，然后使用求和sum进行aggregation
+<ul>
 <li>假设各类attribute的维度相同，如果不相同就需要进行projection</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726100842458.png" alt="image-20230726100842458"></p>
-<h4 id="Different-type-of-pooling"><a href="#Different-type-of-pooling" class="headerlink" title="Different type of pooling"></a>Different type of pooling</h4><ul>
-<li>Pool edge embeddings into nodes to make nodel-level predictions, denoted as $\rho<em>{E_n\rightarrow V</em>{n}}$:<ul>
-<li>在获取了node embedding后，和前文一样，将其投入一个全连接层进行prediction</li>
-</ul>
-</li>
-</ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726101108039.png" alt="image-20230726101108039"></p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726100842458.png"
+alt="image-20230726100842458" />
+<figcaption aria-hidden="true">image-20230726100842458</figcaption>
+</figure>
+<h4 id="different-type-of-pooling">Different type of pooling</h4>
 <ul>
-<li>Pool node embeddings into edges to make edge-level predictions, denoted as $\rho<em>{V_n\rightarrow E</em>{n}}$:<ul>
-<li>每条边连接两个顶点，将这两个node embedding和global-context相加，得到edge embedding</li>
-</ul>
-</li>
-</ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726101323227.png" alt="image-20230726101323227"></p>
+<li>Pool edge embeddings into nodes to make nodel-level predictions,
+denoted as <span class="math inline">\(\rho_{E_n\rightarrow
+V_{n}}\)</span>:
 <ul>
-<li>Pool node/edge embeddings into global context to make global predictions, denoted as $\rho<em>{V_n\rightarrow U</em>{n}}$：<ul>
-<li>如果只有node embedding，可以将所有的node embedding相加求和，作为global-context；然后投入一个全连接层，进行global-level prediction</li>
+<li>在获取了node
+embedding后，和前文一样，将其投入一个全连接层进行prediction</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726104148023.png" alt="image-20230726104148023"></p>
-<h4 id="End-to-end-Simplest-GNN："><a href="#End-to-end-Simplest-GNN：" class="headerlink" title="End-to-end Simplest GNN："></a>End-to-end Simplest GNN：</h4><p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726104508078.png" alt="image-20230726104508078"></p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726101108039.png"
+alt="image-20230726101108039" />
+<figcaption aria-hidden="true">image-20230726101108039</figcaption>
+</figure>
 <ul>
-<li><p>Note that in this simplest GNN formulation, we’re not using the connectivity of the graph at all inside the GNN layer. We only use connectivity when pooling information for prediction.</p>
-</li>
-<li><p>如何在GNN中构建使用connectivity信息的模块？使用Pool或者message pass。两者的区别在于，pool是不同的attributes，相邻的entity之间进行信息传递；message pass是相同的attribute，相邻的entity之间进行信息传递。how to apply pool or message pass within GNN layer ❤</p>
-</li>
+<li>Pool node embeddings into edges to make edge-level predictions,
+denoted as <span class="math inline">\(\rho_{V_n\rightarrow
+E_{n}}\)</span>:
+<ul>
+<li>每条边连接两个顶点，将这两个node
+embedding和global-context相加，得到edge embedding</li>
+</ul></li>
 </ul>
-<h3 id="Passing-messages-between-parts-of-the-graph"><a href="#Passing-messages-between-parts-of-the-graph" class="headerlink" title="Passing messages between parts of the graph"></a>Passing messages between parts of the graph</h3><blockquote>
-<p>在simplest GNN中，每个Layer里的MLP是独立地处理不同type的attribute，没有将图的信息融合进output graph中，这样无法充分利用图的信息。</p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726101323227.png"
+alt="image-20230726101323227" />
+<figcaption aria-hidden="true">image-20230726101323227</figcaption>
+</figure>
+<ul>
+<li>Pool node/edge embeddings into global context to make global
+predictions, denoted as <span class="math inline">\(\rho_{V_n\rightarrow
+U_{n}}\)</span>：
+<ul>
+<li>如果只有node embedding，可以将所有的node
+embedding相加求和，作为global-context；然后投入一个全连接层，进行global-level
+prediction</li>
+</ul></li>
+</ul>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726104148023.png"
+alt="image-20230726104148023" />
+<figcaption aria-hidden="true">image-20230726104148023</figcaption>
+</figure>
+<h4 id="end-to-end-simplest-gnn">End-to-end Simplest GNN：</h4>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726104508078.png"
+alt="image-20230726104508078" />
+<figcaption aria-hidden="true">image-20230726104508078</figcaption>
+</figure>
+<ul>
+<li><p>Note that in this simplest GNN formulation, we’re not using the
+connectivity of the graph at all inside the GNN layer. We only use
+connectivity when pooling information for prediction.</p></li>
+<li><p>如何在GNN中构建使用connectivity信息的模块？使用Pool或者message
+pass。两者的区别在于，pool是不同的attributes，相邻的entity之间进行信息传递；message
+pass是相同的attribute，相邻的entity之间进行信息传递。how to apply pool
+or message pass within GNN layer ❤</p></li>
+</ul>
+<h3 id="passing-messages-between-parts-of-the-graph">Passing messages
+between parts of the graph</h3>
+<blockquote>
+<p>在simplest
+GNN中，每个Layer里的MLP是独立地处理不同type的attribute，没有将图的信息融合进output
+graph中，这样无法充分利用图的信息。</p>
 </blockquote>
 <ul>
-<li><em>Message passing</em> means neighboring nodes or edges exchange information and influence each other’s updated embeddings.</li>
-<li>Message passing works in three steps: <strong><em>gather</em></strong>($g$), <strong><em>aggregate</em></strong> and <strong><em>update</em></strong>. This sequence of operations, when applied once, is the simplest type of <strong>message-passing GNN layer</strong>.</li>
+<li><em>Message passing</em> means neighboring nodes or edges exchange
+information and influence each other’s updated embeddings.</li>
+<li>Message passing works in three steps:
+<strong><em>gather</em></strong>(<span
+class="math inline">\(g\)</span>), <strong><em>aggregate</em></strong>
+and <strong><em>update</em></strong>. This sequence of operations, when
+applied once, is the simplest type of <strong>message-passing GNN
+layer</strong>.</li>
 </ul>
-<h4 id="Message-passing-between-nodes"><a href="#Message-passing-between-nodes" class="headerlink" title="Message passing between nodes"></a>Message passing between nodes</h4><ul>
-<li>在simplest GNN中，对node embedding进行更新时，我们直接将一个node embedding投入对应的MLP；</li>
-<li>在信息传递层里，对一个node进行更新，需要收集它所有的邻接节点（gather），与它自身的embedding相加求和（aggregate），然后再投入MLP（update），这样就是一个node-message-passing GNN Layer</li>
+<h4 id="message-passing-between-nodes">Message passing between
+nodes</h4>
+<ul>
+<li>在simplest GNN中，对node embedding进行更新时，我们直接将一个node
+embedding投入对应的MLP；</li>
+<li>在信息传递层里，对一个node进行更新，需要收集它所有的邻接节点（gather），与它自身的embedding相加求和（aggregate），然后再投入MLP（update），这样就是一个node-message-passing
+GNN Layer</li>
 </ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726110637076.png" alt="image-20230726110637076"></p>
-<h4 id="Graph-Convolutional-Layer"><a href="#Graph-Convolutional-Layer" class="headerlink" title="Graph Convolutional Layer"></a>Graph Convolutional Layer</h4><ul>
-<li><p>This is reminiscent of standard convolution: in essence, <strong><em>message passing and convolution are operations to aggregate and process the information of an element’s neighbors in order to update the element’s value</em></strong>. In graphs, the element is a node, and in images, the element is a pixel. However, the number of neighboring nodes in a graph can be variable, unlike in an image where each pixel has a set number of neighboring elements.</p>
-</li>
-<li><p>By <strong><em>stacking message passing GNN layers</em></strong> together, <strong><em>a node can eventually incorporate information from across the entire graph</em></strong>: after three layers, a node has information about the nodes three steps away from it. 就像感受野一样，最终可以获得全局图片的信息。</p>
-</li>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726110637076.png"
+alt="image-20230726110637076" />
+<figcaption aria-hidden="true">image-20230726110637076</figcaption>
+</figure>
+<h4 id="graph-convolutional-layer">Graph Convolutional Layer</h4>
+<ul>
+<li><p>This is reminiscent of standard convolution: in essence,
+<strong><em>message passing and convolution are operations to aggregate
+and process the information of an element’s neighbors in order to update
+the element’s value</em></strong>. In graphs, the element is a node, and
+in images, the element is a pixel. However, the number of neighboring
+nodes in a graph can be variable, unlike in an image where each pixel
+has a set number of neighboring elements.</p></li>
+<li><p>By <strong><em>stacking message passing GNN layers</em></strong>
+together, <strong><em>a node can eventually incorporate information from
+across the entire graph</em></strong>: after three layers, a node has
+information about the nodes three steps away from it.
+就像感受野一样，最终可以获得全局图片的信息。</p></li>
 </ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726111530116.png" alt="image-20230726111530116"></p>
-<h4 id="Message-Passing-Layer"><a href="#Message-Passing-Layer" class="headerlink" title="Message Passing Layer"></a>Message Passing Layer</h4><ul>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230726111530116.png"
+alt="image-20230726111530116" />
+<figcaption aria-hidden="true">image-20230726111530116</figcaption>
+</figure>
+<h4 id="message-passing-layer">Message Passing Layer</h4>
+<ul>
 <li>我们也可以在节点和边之间进行信息传递</li>
-<li>如下所示，在一个信息传递层里，我们先进行节点到边的信息汇聚，再进行边到节点的信息汇聚，然后对各类attribute进行更新<ul>
+<li>如下所示，在一个信息传递层里，我们先进行节点到边的信息汇聚，再进行边到节点的信息汇聚，然后对各类attribute进行更新
+<ul>
 <li>当节点和边的dimension不同时，可以先进行Projection再相加，也可以在更新前将它们concatenate起来</li>
 <li>如果维度相同，就可以直接相加</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230810152155216.png" alt="image-20230810152155216"></p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230810152155216.png"
+alt="image-20230810152155216" />
+<figcaption aria-hidden="true">image-20230810152155216</figcaption>
+</figure>
 <ul>
 <li>先做点到边的汇聚还是先做边到点的汇聚，会导致不同的结果。具体采用什么顺序要看网络的设计。</li>
 </ul>
-<h3 id="Global-Rpresentations"><a href="#Global-Rpresentations" class="headerlink" title="Global Rpresentations"></a>Global Rpresentations</h3><blockquote>
-<p>There is one flaw with the networks we have described so far: nodes that are far away from each other in the graph may never be able to efficiently transfer information to one another, even if we apply message passing several times.</p>
+<h3 id="global-rpresentations">Global Rpresentations</h3>
+<blockquote>
+<p>There is one flaw with the networks we have described so far: nodes
+that are far away from each other in the graph may never be able to
+efficiently transfer information to one another, even if we apply
+message passing several times.</p>
 </blockquote>
 <ul>
-<li><strong>master node</strong>: this node is connected to all other nodes and edges in the network, and can act as a bridge between them to pass information, represented as U.</li>
+<li><strong>master node</strong>: this node is connected to all other
+nodes and edges in the network, and can act as a bridge between them to
+pass information, represented as U.</li>
 </ul>
-<h4 id="Graph-Nets-Layer"><a href="#Graph-Nets-Layer" class="headerlink" title="Graph Nets Layer"></a>Graph Nets Layer</h4><ul>
+<h4 id="graph-nets-layer">Graph Nets Layer</h4>
+<ul>
 <li>这里，三种attribute都实现了更新</li>
 </ul>
-<p><img src="/images/blogs/GNN-Graph-Neural-Networks/image-20230810153359586.png" alt="image-20230810153359586"></p>
+<figure>
+<img
+src="/images/blogs/GNN-Graph-Neural-Networks/image-20230810153359586.png"
+alt="image-20230810153359586" />
+<figcaption aria-hidden="true">image-20230810153359586</figcaption>
+</figure>
 ]]></content>
       <categories>
         <category>沐神开组会</category>
@@ -347,101 +623,112 @@
   <entry>
     <title>NumPy: Quick Start</title>
     <url>/2023/08/25/NumPy-Quick-Start/</url>
-    <content><![CDATA[<h1 id="NumPy-Quick-Start"><a href="#NumPy-Quick-Start" class="headerlink" title="NumPy - Quick Start"></a>NumPy - Quick Start</h1><h2 id="1-基础知识"><a href="#1-基础知识" class="headerlink" title="1. 基础知识"></a>1. 基础知识</h2><p>NumPy的主要对象是同构多维数组。它是一个元素表（通常是数字），所有类型都相同，由非负整数元组索引。在NumPy中维度称为 轴 。</p>
+    <content><![CDATA[<h1 id="numpy---quick-start">NumPy - Quick Start</h1>
+<h2 id="基础知识">1. 基础知识</h2>
+<p>NumPy的主要对象是同构多维数组。它是一个元素表（通常是数字），所有类型都相同，由非负整数元组索引。在NumPy中维度称为
+轴 。</p>
 <p>NumPy的数组类是ndarray，别名是array。请注意，numpy.array与标准Python库类array.array不同，后者只能处理一维数组。</p>
-<h3 id="1-1-ndarray的主要属性"><a href="#1-1-ndarray的主要属性" class="headerlink" title="1.1 ndarray的主要属性"></a>1.1 ndarray的主要属性</h3><ul>
+<h3 id="ndarray的主要属性">1.1 ndarray的主要属性</h3>
+<ul>
 <li>ndarray.ndim - 返回数组有几个维度</li>
-<li>ndarray.shape - 返回数组的形状，用元组表示，元组的第i个值表示数组第i个维度上有几个元素</li>
-<li>ndarray.size - 返回数组中一共含有多少个元素，即shape函数返回元组中各数值的乘积</li>
-<li>ndarray.dtype - 返回数组元素的类型，ndarray是同构多维数组，所有元素类型相同</li>
+<li>ndarray.shape -
+返回数组的形状，用元组表示，元组的第i个值表示数组第i个维度上有几个元素</li>
+<li>ndarray.size -
+返回数组中一共含有多少个元素，即shape函数返回元组中各数值的乘积</li>
+<li>ndarray.dtype -
+返回数组元素的类型，ndarray是同构多维数组，所有元素类型相同</li>
 <li>ndarray.itemsize - 返回数组每个元素的字节大小</li>
-<li>ndarray.data - 缓冲区中指向数组第一个数据的指针。很少使用，一般用索引来访问数据</li>
+<li>ndarray.data -
+缓冲区中指向数组第一个数据的指针。很少使用，一般用索引来访问数据</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">a = np.arange(<span class="number">15</span>).reshape(<span class="number">3</span>,<span class="number">5</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 0  1  2  3  4]
  [ 5  6  7  8  9]
- [10 11 12 13 14]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.ndim)</span><br></pre></td></tr></table></figure>
-<pre><code>2
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.shape)</span><br></pre></td></tr></table></figure>
-<pre><code>(3, 5)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.size)</span><br></pre></td></tr></table></figure>
-<pre><code>15
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.dtype)</span><br></pre></td></tr></table></figure>
-<pre><code>int32
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.itemsize)</span><br></pre></td></tr></table></figure>
-<pre><code>4
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.data)</span><br></pre></td></tr></table></figure>
-<pre><code>&lt;memory at 0x000002423E72C5F0&gt;
-</code></pre><h3 id="1-2-数组创建"><a href="#1-2-数组创建" class="headerlink" title="1.2 数组创建"></a>1.2 数组创建</h3><p>数组创建通常有三类方法：</p>
-<ol>
-<li>用已有的python列表、元组等序列转换生成ndarray</li>
-<li>生成一定大小的ndarray，但没有具体的数值，而是用一些初始化的占位符代替</li>
-<li>生成处于一定数值范围的ndarray<br>下面给出这三类方法的具体示例</li>
-</ol>
-<h4 id="1-2-1-用python序列创建数组"><a href="#1-2-1-用python序列创建数组" class="headerlink" title="1.2.1 用python序列创建数组"></a>1.2.1 用python序列创建数组</h4><ul>
+ [10 11 12 13 14]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.ndim)</span><br></pre></td></tr></table></figure>
+<pre><code>2</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.shape)</span><br></pre></td></tr></table></figure>
+<pre><code>(3, 5)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.size)</span><br></pre></td></tr></table></figure>
+<pre><code>15</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.dtype)</span><br></pre></td></tr></table></figure>
+<pre><code>int32</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.itemsize)</span><br></pre></td></tr></table></figure>
+<pre><code>4</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.data)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;memory at 0x000002423E72C5F0&gt;</code></pre>
+<h3 id="数组创建">1.2 数组创建</h3>
+<p>数组创建通常有三类方法： 1.
+用已有的python列表、元组等序列转换生成ndarray 2.
+生成一定大小的ndarray，但没有具体的数值，而是用一些初始化的占位符代替 3.
+生成处于一定数值范围的ndarray 下面给出这三类方法的具体示例</p>
+<h4 id="用python序列创建数组">1.2.1 用python序列创建数组</h4>
+<ul>
 <li>可以用python的列表、元组等序列对象直接生成数组，得到的数组的类型是从Python列表中元素的类型推导出来的。</li>
 <li>可以用python序列的序列、或者序列的序列的序列生成多维数组，以此类推</li>
 <li>利用np.array()函数进行创建，注意array应该接受一个序列对象，而不是一串数字参数</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line"><span class="built_in">print</span>(a, a.dtype)</span><br><span class="line">b = np.array((<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>))</span><br><span class="line"><span class="built_in">print</span>(b, b.dtype)</span><br></pre></td></tr></table></figure>
 <pre><code>[1 2 3 4 5] int32
-[ 6  7  8  9 10] int32
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.array([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>],[<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>]])</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.ndim,a.shape)</span><br></pre></td></tr></table></figure>
+[ 6  7  8  9 10] int32</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.array([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>],[<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>]])</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.ndim,a.shape)</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 1  2  3  4  5]
  [ 6  7  8  9 10]]
-2 (2, 5)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># a = np.array(1,2,3,4,5) # wrong</span></span><br><span class="line">b = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]) <span class="comment"># right</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br></pre></td></tr></table></figure>
-<pre><code>[1 2 3 4 5]
-</code></pre><h4 id="1-2-2-元素未知时创建一定大小的数组"><a href="#1-2-2-元素未知时创建一定大小的数组" class="headerlink" title="1.2.2 元素未知时创建一定大小的数组"></a>1.2.2 元素未知时创建一定大小的数组</h4><p>通常，数组的元素最初是未知的，但它的大小是已知的。因此，NumPy提供了几个函数来创建具有初始占位符内容的数组。这就减少了数组增长的必要，因为数组增长的操作花费很大。</p>
-<ul>
-<li>np.zeros()，np.ones()函数分别可以创建一定大小的初始值全为0、初始值全为1的数组</li>
-<li>np.empty()可以创建制定大小，初始值全为随机值的数组，创建的值取决于内存的状态</li>
-<li>注意以上函数的接收参数都要是一个shape元组，并且默认情况下生成数组的dtype为float64，也可以通过dtype参数指定</li>
-</ul>
+2 (2, 5)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># a = np.array(1,2,3,4,5) # wrong</span></span><br><span class="line">b = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]) <span class="comment"># right</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br></pre></td></tr></table></figure>
+<pre><code>[1 2 3 4 5]</code></pre>
+<h4 id="元素未知时创建一定大小的数组">1.2.2
+元素未知时创建一定大小的数组</h4>
+<p>通常，数组的元素最初是未知的，但它的大小是已知的。因此，NumPy提供了几个函数来创建具有初始占位符内容的数组。这就减少了数组增长的必要，因为数组增长的操作花费很大。
++
+np.zeros()，np.ones()函数分别可以创建一定大小的初始值全为0、初始值全为1的数组
++
+np.empty()可以创建制定大小，初始值全为随机值的数组，创建的值取决于内存的状态
++
+注意以上函数的接收参数都要是一个shape元组，并且默认情况下生成数组的dtype为float64，也可以通过dtype参数指定</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.zeros((<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line"><span class="built_in">print</span>(a,a.dtype)</span><br><span class="line">b = np.zeros((<span class="number">2</span>,<span class="number">3</span>), dtype=<span class="built_in">int</span>)</span><br><span class="line"><span class="built_in">print</span>(b,b.dtype)</span><br></pre></td></tr></table></figure>
 <pre><code>[[0. 0. 0.]
  [0. 0. 0.]] float64
 [[0 0 0]
- [0 0 0]] int32
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.ones((<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line"><span class="built_in">print</span>(a,a.dtype)</span><br><span class="line">b = np.ones((<span class="number">2</span>,<span class="number">3</span>),dtype=<span class="built_in">int</span>)</span><br><span class="line"><span class="built_in">print</span>(b,b.dtype)</span><br></pre></td></tr></table></figure>
+ [0 0 0]] int32</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.ones((<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line"><span class="built_in">print</span>(a,a.dtype)</span><br><span class="line">b = np.ones((<span class="number">2</span>,<span class="number">3</span>),dtype=<span class="built_in">int</span>)</span><br><span class="line"><span class="built_in">print</span>(b,b.dtype)</span><br></pre></td></tr></table></figure>
 <pre><code>[[1. 1. 1.]
  [1. 1. 1.]] float64
 [[1 1 1]
- [1 1 1]] int32
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.empty((<span class="number">2</span>,<span class="number">3</span>))  <span class="comment"># 以下生成的值是重启内核后得到的，否则得到了全为1的初始化数组</span></span><br><span class="line"><span class="built_in">print</span>(a, a.dtype)</span><br><span class="line">b = np.empty((<span class="number">2</span>,<span class="number">3</span>),dtype=<span class="built_in">int</span>)</span><br><span class="line"><span class="built_in">print</span>(b, b.dtype)</span><br></pre></td></tr></table></figure>
+ [1 1 1]] int32</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.empty((<span class="number">2</span>,<span class="number">3</span>))  <span class="comment"># 以下生成的值是重启内核后得到的，否则得到了全为1的初始化数组</span></span><br><span class="line"><span class="built_in">print</span>(a, a.dtype)</span><br><span class="line">b = np.empty((<span class="number">2</span>,<span class="number">3</span>),dtype=<span class="built_in">int</span>)</span><br><span class="line"><span class="built_in">print</span>(b, b.dtype)</span><br></pre></td></tr></table></figure>
 <pre><code>[[1.01582801e+094 3.54586565e+068 1.57001898e+155]
  [3.71754479e+177 3.97949006e-315 0.00000000e+000]] float64
 [[538976288 538976288 842095451]
- [858857516 537537629 538976288]] int32
-</code></pre><h4 id="1-2-3-从指定区间采样创建数组"><a href="#1-2-3-从指定区间采样创建数组" class="headerlink" title="1.2.3 从指定区间采样创建数组"></a>1.2.3 从指定区间采样创建数组</h4><p>为了创建数字组成的数组，NumPy提供了arange()和linspace()。</p>
-<ul>
-<li>np.arange()会生成一个数组，这个数组是通过从一个指定区间均匀采样得到的。需要向arange()传入start(opt.),stop和step(opt.)，注意区间是左闭右开，不会取到stop值，start的默认取值是0，step的默认取值是1</li>
-<li>np.linspace()会生成一个数组，这个数组也是通过从一个指定区间均匀采样得到的。需要向linspace()传入start,stop,num(opt.),endpoint等参数，num默认是50，endpoint表示是否包含stop，默认是True，即最后一个元素是stop</li>
-<li>linspace()是通过指定元素个数来生成数组，arange()是通过指定步长来生成数组。</li>
-</ul>
+ [858857516 537537629 538976288]] int32</code></pre>
+<h4 id="从指定区间采样创建数组">1.2.3 从指定区间采样创建数组</h4>
+<p>为了创建数字组成的数组，NumPy提供了arange()和linspace()。 +
+np.arange()会生成一个数组，这个数组是通过从一个指定区间均匀采样得到的。需要向arange()传入start(opt.),stop和step(opt.)，注意区间是左闭右开，不会取到stop值，start的默认取值是0，step的默认取值是1
++
+np.linspace()会生成一个数组，这个数组也是通过从一个指定区间均匀采样得到的。需要向linspace()传入start,stop,num(opt.),endpoint等参数，num默认是50，endpoint表示是否包含stop，默认是True，即最后一个元素是stop
++
+linspace()是通过指定元素个数来生成数组，arange()是通过指定步长来生成数组。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">10</span>)</span><br><span class="line"><span class="built_in">print</span>(a, a.dtype)</span><br><span class="line">b = np.arange(<span class="number">0</span>,<span class="number">10</span>,<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(b, b.dtype)</span><br></pre></td></tr></table></figure>
 <pre><code>[0 1 2 3 4 5 6 7 8 9] int32
-[0 1 2 3 4 5 6 7 8 9] int32
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">0</span>,<span class="number">2</span>,<span class="number">0.5</span>)</span><br><span class="line"><span class="built_in">print</span>(a, a.dtype)</span><br></pre></td></tr></table></figure>
-<pre><code>[0.  0.5 1.  1.5] float64
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.linspace(<span class="number">0</span>,<span class="number">10</span>,<span class="number">11</span>)</span><br><span class="line"><span class="built_in">print</span>(a,a.dtype)</span><br></pre></td></tr></table></figure>
-<pre><code>[ 0.  1.  2.  3.  4.  5.  6.  7.  8.  9. 10.] float64
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.linspace(<span class="number">0</span>,<span class="number">10</span>,<span class="number">10</span>)</span><br><span class="line"><span class="built_in">print</span>(a,a.dtype)</span><br></pre></td></tr></table></figure>
+[0 1 2 3 4 5 6 7 8 9] int32</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">0</span>,<span class="number">2</span>,<span class="number">0.5</span>)</span><br><span class="line"><span class="built_in">print</span>(a, a.dtype)</span><br></pre></td></tr></table></figure>
+<pre><code>[0.  0.5 1.  1.5] float64</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.linspace(<span class="number">0</span>,<span class="number">10</span>,<span class="number">11</span>)</span><br><span class="line"><span class="built_in">print</span>(a,a.dtype)</span><br></pre></td></tr></table></figure>
+<pre><code>[ 0.  1.  2.  3.  4.  5.  6.  7.  8.  9. 10.] float64</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.linspace(<span class="number">0</span>,<span class="number">10</span>,<span class="number">10</span>)</span><br><span class="line"><span class="built_in">print</span>(a,a.dtype)</span><br></pre></td></tr></table></figure>
 <pre><code>[ 0.          1.11111111  2.22222222  3.33333333  4.44444444  5.55555556
-  6.66666667  7.77777778  8.88888889 10.        ] float64
-</code></pre><h3 id="1-3-打印数组"><a href="#1-3-打印数组" class="headerlink" title="1.3 打印数组"></a>1.3 打印数组</h3><p>当打印数组时，NumPy用以下布局显示数组：</p>
-<ul>
-<li>最后一个维度从左到右打印，</li>
-<li>倒数第二个从上到下打印，</li>
-<li>其余维度也从上到下打印，每个切片用空行分隔。<br>然后将一维数组打印成列表，二维数组打印成矩阵，三维数组打印成矩阵数组（用空行分隔）</li>
-</ul>
+  6.66666667  7.77777778  8.88888889 10.        ] float64</code></pre>
+<h3 id="打印数组">1.3 打印数组</h3>
+<p>当打印数组时，NumPy用以下布局显示数组： + 最后一个维度从左到右打印，
++ 倒数第二个从上到下打印， +
+其余维度也从上到下打印，每个切片用空行分隔。
+然后将一维数组打印成列表，二维数组打印成矩阵，三维数组打印成矩阵数组（用空行分隔）</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
-<pre><code>[0 1 2 3 4 5]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>).reshape(<span class="number">2</span>,<span class="number">6</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+<pre><code>[0 1 2 3 4 5]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>).reshape(<span class="number">2</span>,<span class="number">6</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 0  1  2  3  4  5]
- [ 6  7  8  9 10 11]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">36</span>).reshape(<span class="number">3</span>,<span class="number">2</span>,<span class="number">6</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+ [ 6  7  8  9 10 11]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">36</span>).reshape(<span class="number">3</span>,<span class="number">2</span>,<span class="number">6</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
 <pre><code>[[[ 0  1  2  3  4  5]
   [ 6  7  8  9 10 11]]
 
@@ -449,11 +736,12 @@
   [18 19 20 21 22 23]]
 
  [[24 25 26 27 28 29]
-  [30 31 32 33 34 35]]]
-</code></pre><p>如果数组太大而无法打印，NumPy会自动跳过数组的中心部分并仅打印角点</p>
+  [30 31 32 33 34 35]]]</code></pre>
+<p>如果数组太大而无法打印，NumPy会自动跳过数组的中心部分并仅打印角点</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">10000</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
-<pre><code>[   0    1    2 ... 9997 9998 9999]
-</code></pre><h3 id="1-4-基本操作"><a href="#1-4-基本操作" class="headerlink" title="1.4 基本操作"></a>1.4 基本操作</h3><ul>
+<pre><code>[   0    1    2 ... 9997 9998 9999]</code></pre>
+<h3 id="基本操作">1.4 基本操作</h3>
+<ul>
 <li>算术算子是元素级地应用于array</li>
 <li>进行算数运算时，会生成一个新的array来保存结果</li>
 <li>算术算子包括加减乘除、指数运算、布尔运算等</li>
@@ -464,70 +752,65 @@
 [20 29 38 47]
 [0 1 4 9]
 [ 9.12945251 -9.88031624  7.4511316  -2.62374854]
-[ True  True False False]
-</code></pre><p>numpy中矩阵之间的乘法分为elementwise product以及matrix product</p>
-<ul>
-<li>‘*‘表示执行elmentwise product</li>
-<li>‘@’或dot()表示执行matrix product</li>
-<li>matrix product的结果是矩阵顺序决定的</li>
-</ul>
+[ True  True False False]</code></pre>
+<p>numpy中矩阵之间的乘法分为elementwise product以及matrix product +
+'*'表示执行elmentwise product + '@'或dot()表示执行matrix product +
+matrix product的结果是矩阵顺序决定的</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">4</span>).reshape(<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line">b = np.array([[<span class="number">2</span>,<span class="number">2</span>],[<span class="number">2</span>,<span class="number">2</span>]])</span><br><span class="line"><span class="built_in">print</span>(b)</span><br></pre></td></tr></table></figure>
 <pre><code>[[0 1]
  [2 3]]
 [[2 2]
- [2 2]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a*b)</span><br></pre></td></tr></table></figure>
+ [2 2]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a*b)</span><br></pre></td></tr></table></figure>
 <pre><code>[[0 2]
- [4 6]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a@b)</span><br></pre></td></tr></table></figure>
+ [4 6]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a@b)</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 2  2]
- [10 10]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.dot(b))</span><br></pre></td></tr></table></figure>
+ [10 10]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.dot(b))</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 2  2]
- [10 10]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(b.dot(a))</span><br></pre></td></tr></table></figure>
+ [10 10]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(b.dot(a))</span><br></pre></td></tr></table></figure>
 <pre><code>[[4 8]
- [4 8]]
-</code></pre><ul>
-<li>算术运算是创建一个新数组来保存计算结果的，但是有些运算符号，比如’+=’,’*=’是原地执行的，即将结果覆盖掉被操作数组的原数据</li>
+ [4 8]]</code></pre>
+<ul>
+<li>算术运算是创建一个新数组来保存计算结果的，但是有些运算符号，比如'+=','*='是原地执行的，即将结果覆盖掉被操作数组的原数据</li>
 <li>当不同dytpe的数组一起被计算时，结果数组与更精确的数组对齐(upcasting，即向上转换)</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.ones(<span class="number">3</span>, dtype=np.int32)</span><br><span class="line">b = np.linspace(<span class="number">0</span>, np.pi, <span class="number">3</span>)</span><br><span class="line"><span class="built_in">print</span>(b.dtype)</span><br><span class="line">c = a + b</span><br><span class="line"><span class="built_in">print</span>(c,c.dtype)</span><br></pre></td></tr></table></figure>
 <pre><code>float64
-[1.         2.57079633 4.14159265] float64
-</code></pre><ul>
+[1.         2.57079633 4.14159265] float64</code></pre>
+<ul>
 <li>ndarray类中封装了很多一元操作，例如sum(),min(),max()</li>
 <li>默认情况下，这些一元操作是全局地应用于数组，即无论数组的形状如何，结果都与将数组拉伸为列表后的结果相同</li>
-<li>也可以通过axis参数来指定在数组的哪个维度上应用一元操作<ul>
+<li>也可以通过axis参数来指定在数组的哪个维度上应用一元操作</li>
 <li>根据数组的打印规则，数组的最后一个维度数据是从左到右打印的，所以数组最外面的维度为0，最里面的维度最大</li>
 <li>沿着某个axis操作，就相当于将数组该维度压缩为1</li>
-</ul>
-</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>).reshape(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.<span class="built_in">sum</span>())</span><br><span class="line"><span class="built_in">print</span>(a.<span class="built_in">max</span>())</span><br><span class="line"><span class="built_in">print</span>(a.<span class="built_in">min</span>())</span><br></pre></td></tr></table></figure>
 <pre><code>[[0 1 2]
  [3 4 5]]
 15
 5
-0
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.<span class="built_in">sum</span>(axis=<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(a.<span class="built_in">sum</span>(axis=<span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+0</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.<span class="built_in">sum</span>(axis=<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(a.<span class="built_in">sum</span>(axis=<span class="number">0</span>))</span><br></pre></td></tr></table></figure>
 <pre><code>[ 3 12]
-[3 5 7]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.<span class="built_in">max</span>(axis=<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-<pre><code>[2 5]
-</code></pre><h3 id="1-5-通函数"><a href="#1-5-通函数" class="headerlink" title="1.5 通函数"></a>1.5 通函数</h3><p>Numpy提供了一些常见的数学函数，如sin(),cos(),exp(),sqrt()，这些函数是按元素级地应用于数组，被称为Universal Function</p>
-<ul>
-<li>这些函数输入一个矩阵，输出一个新矩阵</li>
-</ul>
+[3 5 7]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.<span class="built_in">max</span>(axis=<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>[2 5]</code></pre>
+<h3 id="通函数">1.5 通函数</h3>
+<p>Numpy提供了一些常见的数学函数，如sin(),cos(),exp(),sqrt()，这些函数是按元素级地应用于数组，被称为Universal
+Function + 这些函数输入一个矩阵，输出一个新矩阵</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(np.sqrt(a))</span><br></pre></td></tr></table></figure>
-<pre><code>[0.         1.         1.41421356 1.73205081]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
-<pre><code>[0 1 2 3]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.sin(a))</span><br></pre></td></tr></table></figure>
-<pre><code>[0.         0.84147098 0.90929743 0.14112001]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.exp(a))</span><br></pre></td></tr></table></figure>
-<pre><code>[ 1.          2.71828183  7.3890561  20.08553692]
-</code></pre><h3 id="1-6-索引、切片和迭代"><a href="#1-6-索引、切片和迭代" class="headerlink" title="1.6 索引、切片和迭代"></a>1.6 索引、切片和迭代</h3><ul>
+<pre><code>[0.         1.         1.41421356 1.73205081]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+<pre><code>[0 1 2 3]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.sin(a))</span><br></pre></td></tr></table></figure>
+<pre><code>[0.         0.84147098 0.90929743 0.14112001]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.exp(a))</span><br></pre></td></tr></table></figure>
+<pre><code>[ 1.          2.71828183  7.3890561  20.08553692]</code></pre>
+<h3 id="索引切片和迭代">1.6 索引、切片和迭代</h3>
+<ul>
 <li>一维数组可以进行索引和切片操作，和python的List一样</li>
 <li>多维数组也可以进行索引和切片操作，多维数组每个axis上都有索引，要访问多维数组中的某个元素，需要用多个维度的索引组成元组来访问，每个索引用逗号分隔</li>
 </ul>
@@ -539,41 +822,39 @@
   [18 19 20 21 22 23]]
 
  [[24 25 26 27 28 29]
-  [30 31 32 33 34 35]]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
-<pre><code>0
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[:,<span class="number">0</span>,<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
-<pre><code>[ 0 12 24]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[:,<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+  [30 31 32 33 34 35]]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>0</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[:,<span class="number">0</span>,<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>[ 0 12 24]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[:,<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 0  1  2  3  4  5]
  [12 13 14 15 16 17]
- [24 25 26 27 28 29]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[:,<span class="number">0</span>,:])</span><br></pre></td></tr></table></figure>
+ [24 25 26 27 28 29]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[:,<span class="number">0</span>,:])</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 0  1  2  3  4  5]
  [12 13 14 15 16 17]
- [24 25 26 27 28 29]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[<span class="number">0</span>,<span class="number">1</span>,:])</span><br></pre></td></tr></table></figure>
-<pre><code>[ 6  7  8  9 10 11]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[<span class="number">2</span>,:-<span class="number">1</span>,<span class="number">0</span>:<span class="number">4</span>])</span><br></pre></td></tr></table></figure>
-<pre><code>[[24 25 26 27]]
-</code></pre><ul>
-<li>当多维数组提供的索引个数小于维度个数时，缺失的维度就默认为全切片，即用’:’代替缺失维度的索引</li>
-<li>对于多维数组，如果有维度的索引为全切片，也可以用’…’代替一个或连续多个’:’</li>
+ [24 25 26 27 28 29]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[<span class="number">0</span>,<span class="number">1</span>,:])</span><br></pre></td></tr></table></figure>
+<pre><code>[ 6  7  8  9 10 11]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[<span class="number">2</span>,:-<span class="number">1</span>,<span class="number">0</span>:<span class="number">4</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>[[24 25 26 27]]</code></pre>
+<ul>
+<li>当多维数组提供的索引个数小于维度个数时，缺失的维度就默认为全切片，即用':'代替缺失维度的索引</li>
+<li>对于多维数组，如果有维度的索引为全切片，也可以用'...'代替一个或连续多个':'</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">print</span>(a[<span class="number">0</span>,:,:])</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 0  1  2  3  4  5]
  [ 6  7  8  9 10 11]]
 [[ 0  1  2  3  4  5]
- [ 6  7  8  9 10 11]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[<span class="number">0</span>,...])</span><br></pre></td></tr></table></figure>
+ [ 6  7  8  9 10 11]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a[<span class="number">0</span>,...])</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 0  1  2  3  4  5]
- [ 6  7  8  9 10 11]]
-</code></pre><ul>
-<li>数组的迭代是与第一个维度对齐的<ul>
+ [ 6  7  8  9 10 11]]</code></pre>
+<ul>
+<li>数组的迭代是与第一个维度对齐的</li>
 <li>对于一维数组，其迭代就是列举每个元素</li>
 <li>对于多维数组，其迭代就是列举其第0维上的元素</li>
-</ul>
-</li>
 <li>如果想对多维数组的所有元素进行迭代，可以使用.flat属性</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">5</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> a:</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
@@ -581,14 +862,14 @@
 1
 2
 3
-4
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">10</span>).reshape(<span class="number">5</span>,<span class="number">2</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> a:</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
+4</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">10</span>).reshape(<span class="number">5</span>,<span class="number">2</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> a:</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
 <pre><code>[0 1]
 [2 3]
 [4 5]
 [6 7]
-[8 9]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">20</span>).reshape(<span class="number">5</span>,<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> a: </span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
+[8 9]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">20</span>).reshape(<span class="number">5</span>,<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> a: </span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
 <pre><code>[[0 1]
  [2 3]]
 [[4 5]
@@ -598,10 +879,10 @@
 [[12 13]
  [14 15]]
 [[16 17]
- [18 19]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.flat)</span><br></pre></td></tr></table></figure>
-<pre><code>&lt;numpy.flatiter object at 0x0000022425FA6F20&gt;
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> a.flat:</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
+ [18 19]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.flat)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;numpy.flatiter object at 0x0000022425FA6F20&gt;</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> a.flat:</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
 <pre><code>0
 1
 2
@@ -621,61 +902,56 @@
 16
 17
 18
-19
-</code></pre><h2 id="2-形状操作"><a href="#2-形状操作" class="headerlink" title="2. 形状操作"></a>2. 形状操作</h2><h3 id="2-1-修改数组的形状"><a href="#2-1-修改数组的形状" class="headerlink" title="2.1 修改数组的形状"></a>2.1 修改数组的形状</h3><p>数组的形状是指数组每个维度上元素的个数，所组成的元组</p>
-<p>以下函数/属性都可以返回一个修改形状后的数组，而不改变原数组</p>
-<ul>
-<li>reshape():ndarray.reshape()传参可以是分离的形状参数，也可以是一个元组，其中包括待修改的形状</li>
-<li>T:ndarray.T将数组转置<ul>
-<li>一维数组转置后不变</li>
-<li>二维数组转置得到的是标准转置后的矩阵</li>
-<li>n维数组转置，默认情况下是将原数组的shape做一个翻转；也可以指定特定的axis顺序</li>
-</ul>
-</li>
-<li>ravel():将原矩阵以C-style拉伸成一个一维数组，返回新数组</li>
-<li>区分：<ul>
-<li>reshape()的执行逻辑是，将原数组先进行ravel，即以C-style拉伸成一维数组，然后对这个一维数组，按照传入形状的第一个维度进行划分，然后对每个子数组按照第二个维度进行划分，直到划分完毕，生成新形状的数组</li>
-<li>T不改变原数组中元素的排列，而是换一个view（角度）看待这个多维数组。将一个(4,3,2)的数组想象成一个长方形，转置得到的(2,3,4)数组就是换一个角度看待这个长方形，长方形并没有发生任何变化，但在新view下，它的长宽高变了</li>
-</ul>
-</li>
-</ul>
+19</code></pre>
+<h2 id="形状操作">2. 形状操作</h2>
+<h3 id="修改数组的形状">2.1 修改数组的形状</h3>
+<p>数组的形状是指数组每个维度上元素的个数，所组成的元组</p>
+<p>以下函数/属性都可以返回一个修改形状后的数组，而不改变原数组 +
+reshape():ndarray.reshape()传参可以是分离的形状参数，也可以是一个元组，其中包括待修改的形状
++ T:ndarray.T将数组转置 + 一维数组转置后不变 +
+二维数组转置得到的是标准转置后的矩阵 +
+n维数组转置，默认情况下是将原数组的shape做一个翻转；也可以指定特定的axis顺序
++ ravel():将原矩阵以C-style拉伸成一个一维数组，返回新数组 + 区分： +
+reshape()的执行逻辑是，将原数组先进行ravel，即以C-style拉伸成一维数组，然后对这个一维数组，按照传入形状的第一个维度进行划分，然后对每个子数组按照第二个维度进行划分，直到划分完毕，生成新形状的数组
++
+T不改变原数组中元素的排列，而是换一个view（角度）看待这个多维数组。将一个(4,3,2)的数组想象成一个长方形，转置得到的(2,3,4)数组就是换一个角度看待这个长方形，长方形并没有发生任何变化，但在新view下，它的长宽高变了</p>
 <p>上述函数都是返回一个修改形状的矩阵，原矩阵不发生变化；resize()函数的执行逻辑与reshape()相同，不同的是它直接在原矩阵上进行修改</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line"><span class="built_in">print</span>(a,a.shape)</span><br><span class="line"><span class="built_in">print</span>(a.reshape(<span class="number">3</span>,<span class="number">4</span>))</span><br><span class="line"><span class="built_in">print</span>(a.shape)</span><br></pre></td></tr></table></figure>
 <pre><code>[ 0  1  2  3  4  5  6  7  8  9 10 11] (12,)
 [[ 0  1  2  3]
  [ 4  5  6  7]
  [ 8  9 10 11]]
-(12,)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.reshape((<span class="number">3</span>,<span class="number">4</span>)))</span><br></pre></td></tr></table></figure>
+(12,)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.reshape((<span class="number">3</span>,<span class="number">4</span>)))</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 0  1  2  3]
  [ 4  5  6  7]
- [ 8  9 10 11]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.ravel())</span><br></pre></td></tr></table></figure>
-<pre><code>[ 0  1  2  3  4  5  6  7  8  9 10 11]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = a.reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.T)</span><br></pre></td></tr></table></figure>
-<pre><code>[[ 0  1  2  3]
- [ 4  5  6  7]
- [ 8  9 10 11]]
-[[ 0  4  8]
- [ 1  5  9]
- [ 2  6 10]
- [ 3  7 11]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.ravel())</span><br></pre></td></tr></table></figure>
-<pre><code>[ 0  1  2  3  4  5  6  7  8  9 10 11]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.T.ravel()) <span class="comment">#将a.T以C-style拉伸成一维数组返回</span></span><br></pre></td></tr></table></figure>
-<pre><code>[ 0  4  8  1  5  9  2  6 10  3  7 11]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 不同维度的数组进行转置</span></span><br><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.T)</span><br></pre></td></tr></table></figure>
-<pre><code>[ 0  1  2  3  4  5  6  7  8  9 10 11]
-[ 0  1  2  3  4  5  6  7  8  9 10 11]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.T)</span><br></pre></td></tr></table></figure>
+ [ 8  9 10 11]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.ravel())</span><br></pre></td></tr></table></figure>
+<pre><code>[ 0  1  2  3  4  5  6  7  8  9 10 11]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = a.reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.T)</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 0  1  2  3]
  [ 4  5  6  7]
  [ 8  9 10 11]]
 [[ 0  4  8]
  [ 1  5  9]
  [ 2  6 10]
- [ 3  7 11]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">24</span>).reshape(<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.T)</span><br></pre></td></tr></table></figure>
+ [ 3  7 11]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.ravel())</span><br></pre></td></tr></table></figure>
+<pre><code>[ 0  1  2  3  4  5  6  7  8  9 10 11]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(a.T.ravel()) <span class="comment">#将a.T以C-style拉伸成一维数组返回</span></span><br></pre></td></tr></table></figure>
+<pre><code>[ 0  4  8  1  5  9  2  6 10  3  7 11]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 不同维度的数组进行转置</span></span><br><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.T)</span><br></pre></td></tr></table></figure>
+<pre><code>[ 0  1  2  3  4  5  6  7  8  9 10 11]
+[ 0  1  2  3  4  5  6  7  8  9 10 11]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.T)</span><br></pre></td></tr></table></figure>
+<pre><code>[[ 0  1  2  3]
+ [ 4  5  6  7]
+ [ 8  9 10 11]]
+[[ 0  4  8]
+ [ 1  5  9]
+ [ 2  6 10]
+ [ 3  7 11]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">24</span>).reshape(<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.T)</span><br></pre></td></tr></table></figure>
 <pre><code>[[[ 0  1]
   [ 2  3]
   [ 4  5]]
@@ -697,64 +973,58 @@
 
  [[ 1  7 13 19]
   [ 3  9 15 21]
-  [ 5 11 17 23]]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.shape)</span><br><span class="line">a.resize(<span class="number">2</span>,<span class="number">6</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.shape)</span><br></pre></td></tr></table></figure>
+  [ 5 11 17 23]]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.shape)</span><br><span class="line">a.resize(<span class="number">2</span>,<span class="number">6</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(a.shape)</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 0  1  2  3]
  [ 4  5  6  7]
  [ 8  9 10 11]]
 (3, 4)
 [[ 0  1  2  3  4  5]
  [ 6  7  8  9 10 11]]
-(2, 6)
-</code></pre><h3 id="2-2-不同的数组进行堆叠"><a href="#2-2-不同的数组进行堆叠" class="headerlink" title="2.2 不同的数组进行堆叠"></a>2.2 不同的数组进行堆叠</h3><ul>
-<li><p>np.vstack():vertical_stack，将数组序列沿着第0维度堆叠</p>
+(2, 6)</code></pre>
+<h3 id="不同的数组进行堆叠">2.2 不同的数组进行堆叠</h3>
 <ul>
-<li>传入参数是数组序列</li>
-<li>输入的数组除了第0维度，其余维度的形状必须相同</li>
-<li>如果输入的都是一维数组，则会将一维数组变形为(1,n)，然后沿第0维度堆叠，所以输入的一维数组必须长度相等</li>
-<li>数组可以是n维，没有限制</li>
-</ul>
-</li>
-<li><p>np.hstack():horizontal_stack，将数组序列沿着第1维度堆叠</p>
-<ul>
-<li>传入参数是数组序列</li>
-<li>输入的数组除了第1维度，其余维度的形状必须相同</li>
-<li>如果输入的都是一维数组，则会将一维数组变形为(1,n)，然后沿着第1维度堆叠，所以输入的一维数组长度不需要相等</li>
-<li>数组可以是n维，没有限制</li>
-</ul>
-</li>
-<li><p>np.vstack()和np.hstack()如果根据函数的字面意义来理解，当它们处理2维数组时，是最符合其字面含义的</p>
-</li>
+<li><p>np.vstack():vertical_stack，将数组序列沿着第0维度堆叠</p></li>
+<li><p>传入参数是数组序列</p></li>
+<li><p>输入的数组除了第0维度，其余维度的形状必须相同</p></li>
+<li><p>如果输入的都是一维数组，则会将一维数组变形为(1,n)，然后沿第0维度堆叠，所以输入的一维数组必须长度相等</p></li>
+<li><p>数组可以是n维，没有限制</p></li>
+<li><p>np.hstack():horizontal_stack，将数组序列沿着第1维度堆叠</p></li>
+<li><p>传入参数是数组序列</p></li>
+<li><p>输入的数组除了第1维度，其余维度的形状必须相同</p></li>
+<li><p>如果输入的都是一维数组，则会将一维数组变形为(1,n)，然后沿着第1维度堆叠，所以输入的一维数组长度不需要相等</p></li>
+<li><p>数组可以是n维，没有限制</p></li>
+<li><p>np.vstack()和np.hstack()如果根据函数的字面意义来理解，当它们处理2维数组时，是最符合其字面含义的</p></li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>)</span><br><span class="line">b = np.arange(<span class="number">6</span>)</span><br><span class="line">np.vstack((a,b))</span><br></pre></td></tr></table></figure>
 <pre><code>array([[0, 1, 2, 3, 4, 5],
-       [0, 1, 2, 3, 4, 5]])
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>).reshape(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">b = np.arange(<span class="number">9</span>).reshape(<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line">np.vstack((a,b))</span><br></pre></td></tr></table></figure>
+       [0, 1, 2, 3, 4, 5]])</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>).reshape(<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">b = np.arange(<span class="number">9</span>).reshape(<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line">np.vstack((a,b))</span><br></pre></td></tr></table></figure>
 <pre><code>array([[0, 1, 2],
        [3, 4, 5],
        [0, 1, 2],
        [3, 4, 5],
-       [6, 7, 8]])
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>).reshape(<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">b = np.arange(<span class="number">6</span>).reshape(<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">np.vstack((a,b))</span><br></pre></td></tr></table></figure>
+       [6, 7, 8]])</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>).reshape(<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">b = np.arange(<span class="number">6</span>).reshape(<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">np.vstack((a,b))</span><br></pre></td></tr></table></figure>
 <pre><code>array([[[[0, 1, 2],
          [3, 4, 5]]],
 
 
        [[[0, 1, 2],
-         [3, 4, 5]]]])
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>).reshape(<span class="number">3</span>,<span class="number">2</span>)</span><br><span class="line">b = np.arange(<span class="number">9</span>).reshape(<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line">np.hstack((a,b))</span><br></pre></td></tr></table></figure>
+         [3, 4, 5]]]])</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>).reshape(<span class="number">3</span>,<span class="number">2</span>)</span><br><span class="line">b = np.arange(<span class="number">9</span>).reshape(<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line">np.hstack((a,b))</span><br></pre></td></tr></table></figure>
 <pre><code>array([[0, 1, 0, 1, 2],
        [2, 3, 3, 4, 5],
-       [4, 5, 6, 7, 8]])
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>)</span><br><span class="line">b = np.arange(<span class="number">9</span>)</span><br><span class="line">np.hstack((a,b))</span><br></pre></td></tr></table></figure>
-<pre><code>array([0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 6, 7, 8])
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>).reshape(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">b = np.arange(<span class="number">9</span>).reshape(<span class="number">1</span>,<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line">np.hstack((a,b))</span><br></pre></td></tr></table></figure>
+       [4, 5, 6, 7, 8]])</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>)</span><br><span class="line">b = np.arange(<span class="number">9</span>)</span><br><span class="line">np.hstack((a,b))</span><br></pre></td></tr></table></figure>
+<pre><code>array([0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 6, 7, 8])</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>).reshape(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">b = np.arange(<span class="number">9</span>).reshape(<span class="number">1</span>,<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line">np.hstack((a,b))</span><br></pre></td></tr></table></figure>
 <pre><code>array([[[0, 1, 2],
         [3, 4, 5],
         [0, 1, 2],
         [3, 4, 5],
-        [6, 7, 8]]])
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>).reshape(<span class="number">3</span>,<span class="number">2</span>)</span><br><span class="line">b = np.arange(<span class="number">6</span>).reshape(<span class="number">3</span>,<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(np.vstack((a,b)))</span><br><span class="line"><span class="built_in">print</span>(np.hstack((a,b)))</span><br></pre></td></tr></table></figure>
+        [6, 7, 8]]])</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">6</span>).reshape(<span class="number">3</span>,<span class="number">2</span>)</span><br><span class="line">b = np.arange(<span class="number">6</span>).reshape(<span class="number">3</span>,<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(np.vstack((a,b)))</span><br><span class="line"><span class="built_in">print</span>(np.hstack((a,b)))</span><br></pre></td></tr></table></figure>
 <pre><code>[[0 1]
  [2 3]
  [4 5]
@@ -763,68 +1033,54 @@
  [4 5]]
 [[0 1 0 1]
  [2 3 2 3]
- [4 5 4 5]]
-</code></pre><ul>
-<li><p>np.concatenate():将输入的数组序列沿着指定的已存在的维度堆叠</p>
+ [4 5 4 5]]</code></pre>
 <ul>
-<li>传入参数：数组序列和axis，用于指定维度</li>
-<li>输入的数组序列除了在axis维度上可以形状不同，其余维度形状必须相同</li>
-<li>axis默认是0，所以在默认形况下，concatenate()与vstack()相等；如果axis=None,那么输入序列需要先flatten成一维数组，然后进行拼接</li>
-</ul>
-</li>
-<li><p>np.stack():将输入的数组序列沿着一个新的维度进行堆叠</p>
-<ul>
-<li>传入参数：数组序列和axis，axis用于指定新维度在结果数组形状中的index</li>
-<li>传入的数组序列必须形状相同</li>
-<li>axis默认是0，即将所有数组整个当作切片堆叠在一起，形成新的第0维度</li>
-</ul>
-</li>
+<li><p>np.concatenate():将输入的数组序列沿着指定的已存在的维度堆叠</p></li>
+<li><p>传入参数：数组序列和axis，用于指定维度</p></li>
+<li><p>输入的数组序列除了在axis维度上可以形状不同，其余维度形状必须相同</p></li>
+<li><p>axis默认是0，所以在默认形况下，concatenate()与vstack()相等；如果axis=None,那么输入序列需要先flatten成一维数组，然后进行拼接</p></li>
+<li><p>np.stack():将输入的数组序列沿着一个新的维度进行堆叠</p></li>
+<li><p>传入参数：数组序列和axis，axis用于指定新维度在结果数组形状中的index</p></li>
+<li><p>传入的数组序列必须形状相同</p></li>
+<li><p>axis默认是0，即将所有数组整个当作切片堆叠在一起，形成新的第0维度</p></li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">4</span>).reshape(<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line">b = np.arange(<span class="number">2</span>).reshape(<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="built_in">print</span>(b)</span><br></pre></td></tr></table></figure>
 <pre><code>[[0 1]
  [2 3]]
-[[0 1]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.concatenate((a,b),axis=<span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+[[0 1]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.concatenate((a,b),axis=<span class="number">0</span>))</span><br></pre></td></tr></table></figure>
 <pre><code>[[0 1]
  [2 3]
- [0 1]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.concatenate((a,b.T),axis=<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+ [0 1]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.concatenate((a,b.T),axis=<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
 <pre><code>[[0 1 0]
- [2 3 1]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.concatenate((a,b),axis=<span class="literal">None</span>))</span><br></pre></td></tr></table></figure>
-<pre><code>[0 1 2 3 0 1]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">4</span>)</span><br><span class="line">b = np.arange(<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(a,b)</span><br></pre></td></tr></table></figure>
-<pre><code>[0 1 2 3] [0 1]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.concatenate((a,b)))</span><br></pre></td></tr></table></figure>
-<pre><code>[0 1 2 3 0 1]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">arrays = [np.arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">4</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)]</span><br><span class="line">stacked = np.stack(arrays)</span><br><span class="line"><span class="built_in">print</span>(stacked.shape)</span><br></pre></td></tr></table></figure>
-<pre><code>(10, 3, 4)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">stacked = np.stack(arrays,axis=<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(stacked.shape)</span><br></pre></td></tr></table></figure>
-<pre><code>(3, 10, 4)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">stacked = np.stack(arrays,axis=<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(stacked.shape)</span><br></pre></td></tr></table></figure>
-<pre><code>(3, 4, 10)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line">b = np.array([<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>])</span><br><span class="line"><span class="built_in">print</span>(np.stack((a,b),axis=-<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+ [2 3 1]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.concatenate((a,b),axis=<span class="literal">None</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>[0 1 2 3 0 1]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">4</span>)</span><br><span class="line">b = np.arange(<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(a,b)</span><br></pre></td></tr></table></figure>
+<pre><code>[0 1 2 3] [0 1]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(np.concatenate((a,b)))</span><br></pre></td></tr></table></figure>
+<pre><code>[0 1 2 3 0 1]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">arrays = [np.arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">4</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)]</span><br><span class="line">stacked = np.stack(arrays)</span><br><span class="line"><span class="built_in">print</span>(stacked.shape)</span><br></pre></td></tr></table></figure>
+<pre><code>(10, 3, 4)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">stacked = np.stack(arrays,axis=<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(stacked.shape)</span><br></pre></td></tr></table></figure>
+<pre><code>(3, 10, 4)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">stacked = np.stack(arrays,axis=<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(stacked.shape)</span><br></pre></td></tr></table></figure>
+<pre><code>(3, 4, 10)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line">b = np.array([<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>])</span><br><span class="line"><span class="built_in">print</span>(np.stack((a,b),axis=-<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
 <pre><code>[[1 4]
  [2 5]
- [3 6]]
-</code></pre><h3 id="2-3-数组划分"><a href="#2-3-数组划分" class="headerlink" title="2.3 数组划分"></a>2.3 数组划分</h3><ul>
-<li><p>np.split()：将数组沿着指定维度，划分为指定的部分</p>
+ [3 6]]</code></pre>
+<h3 id="数组划分">2.3 数组划分</h3>
 <ul>
-<li>传入参数：数组，axis（用于指定沿哪个维度划分），indices_or_sections</li>
-<li>indices_or_sections如果是int,说明需要沿着维度将数组平等划分为若干部分，如果不能平等划分会报错</li>
-<li>indices_or_sections如果是一维数组，说明需要沿着维度，按索引进行划分。如果输入是[2,3],则划分结果为[:2],[2:3],[3:]</li>
-</ul>
-</li>
-<li><p>np.hsplit()：与split()函数一样，但是沿着固定的第1维度进行划分</p>
-<ul>
-<li>如果输入数组是一维数组，则沿着第0维度划分</li>
-</ul>
-</li>
-<li><p>np.vsplit()：与split()函数一样，但是沿着固定的第0维度进行划分</p>
-<ul>
-<li>输入数组必须至少有2个维度</li>
-</ul>
-</li>
+<li><p>np.split()：将数组沿着指定维度，划分为指定的部分</p></li>
+<li><p>传入参数：数组，axis（用于指定沿哪个维度划分），indices_or_sections</p></li>
+<li><p>indices_or_sections如果是int,说明需要沿着维度将数组平等划分为若干部分，如果不能平等划分会报错</p></li>
+<li><p>indices_or_sections如果是一维数组，说明需要沿着维度，按索引进行划分。如果输入是[2,3],则划分结果为[:2],[2:3],[3:]</p></li>
+<li><p>np.hsplit()：与split()函数一样，但是沿着固定的第1维度进行划分</p></li>
+<li><p>如果输入数组是一维数组，则沿着第0维度划分</p></li>
+<li><p>np.vsplit()：与split()函数一样，但是沿着固定的第0维度进行划分</p></li>
+<li><p>输入数组必须至少有2个维度</p></li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">24</span>).reshape(<span class="number">2</span>,<span class="number">12</span>)</span><br><span class="line">np.split(a,<span class="number">3</span>,axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>[array([[ 0,  1,  2,  3],
@@ -832,131 +1088,125 @@
  array([[ 4,  5,  6,  7],
         [16, 17, 18, 19]]),
  array([[ 8,  9, 10, 11],
-        [20, 21, 22, 23]])]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># np.split(a,3,axis=0) # wrong</span></span><br><span class="line">np.split(a,<span class="number">2</span>,axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+        [20, 21, 22, 23]])]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># np.split(a,3,axis=0) # wrong</span></span><br><span class="line">np.split(a,<span class="number">2</span>,axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>[array([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11]]),
- array([[12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]])]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">np.split(a,[<span class="number">4</span>,<span class="number">8</span>],axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+ array([[12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]])]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">np.split(a,[<span class="number">4</span>,<span class="number">8</span>],axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>[array([[ 0,  1,  2,  3],
         [12, 13, 14, 15]]),
  array([[ 4,  5,  6,  7],
         [16, 17, 18, 19]]),
  array([[ 8,  9, 10, 11],
-        [20, 21, 22, 23]])]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">np.hsplit(a,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+        [20, 21, 22, 23]])]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">np.hsplit(a,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>[array([[ 0,  1,  2,  3],
         [12, 13, 14, 15]]),
  array([[ 4,  5,  6,  7],
         [16, 17, 18, 19]]),
  array([[ 8,  9, 10, 11],
-        [20, 21, 22, 23]])]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line">np.hsplit(a,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-<pre><code>[array([0, 1, 2, 3]), array([4, 5, 6, 7]), array([ 8,  9, 10, 11])]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># a = np.arange(12)</span></span><br><span class="line"><span class="comment"># np.vsplit(a,3) #wrong</span></span><br><span class="line">a = np.arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">np.vsplit(a,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-<pre><code>[array([[0, 1, 2, 3]]), array([[4, 5, 6, 7]]), array([[ 8,  9, 10, 11]])]
-</code></pre><h2 id="3-拷贝和视图"><a href="#3-拷贝和视图" class="headerlink" title="3. 拷贝和视图"></a>3. 拷贝和视图</h2><p>当操作数组时，数组的数据有时候会进行拷贝，有时候不会进行拷贝。如果不分清，可能会造成数据混淆。一共有三种情况：完全不拷贝、浅拷贝（或视图）、深拷贝。</p>
-<h3 id="3-1-完全不拷贝"><a href="#3-1-完全不拷贝" class="headerlink" title="3.1 完全不拷贝"></a>3.1 完全不拷贝</h3><p>完全不拷贝一般有两种情况：第一种是简单赋值，第二种是可变对象作为参数传入函数</p>
-<ul>
-<li>简单赋值：这种情况下，赋值的a和被赋值的b仅仅是同一个对象的不同名称。这是如果对b的对象进行修改，则a也会被修改。（注意分清哪些操作是原地执行，哪些不是）</li>
-<li>可变对象作为函数的传入参数：如果函数调用时，传入参数是可变对象，那么执行的是引用传递，函数传入的变量和调用时的变量指向的是同一个对象。函数中变量如果修改了对象，则函数外的变量也会发生变化。</li>
-</ul>
+        [20, 21, 22, 23]])]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line">np.hsplit(a,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>[array([0, 1, 2, 3]), array([4, 5, 6, 7]), array([ 8,  9, 10, 11])]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># a = np.arange(12)</span></span><br><span class="line"><span class="comment"># np.vsplit(a,3) #wrong</span></span><br><span class="line">a = np.arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">np.vsplit(a,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>[array([[0, 1, 2, 3]]), array([[4, 5, 6, 7]]), array([[ 8,  9, 10, 11]])]</code></pre>
+<h2 id="拷贝和视图">3. 拷贝和视图</h2>
+<p>当操作数组时，数组的数据有时候会进行拷贝，有时候不会进行拷贝。如果不分清，可能会造成数据混淆。一共有三种情况：完全不拷贝、浅拷贝（或视图）、深拷贝。
+### 3.1 完全不拷贝
+完全不拷贝一般有两种情况：第一种是简单赋值，第二种是可变对象作为参数传入函数
++
+简单赋值：这种情况下，赋值的a和被赋值的b仅仅是同一个对象的不同名称。这是如果对b的对象进行修改，则a也会被修改。（注意分清哪些操作是原地执行，哪些不是）
++
+可变对象作为函数的传入参数：如果函数调用时，传入参数是可变对象，那么执行的是引用传递，函数传入的变量和调用时的变量指向的是同一个对象。函数中变量如果修改了对象，则函数外的变量也会发生变化。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line">b = a</span><br><span class="line"><span class="built_in">print</span>(b <span class="keyword">is</span> a) </span><br><span class="line">b.resize((<span class="number">3</span>,<span class="number">4</span>))</span><br><span class="line"><span class="built_in">print</span>(b.shape)</span><br><span class="line"><span class="built_in">print</span>(a.shape) <span class="comment"># resize是原地执行</span></span><br></pre></td></tr></table></figure>
 <pre><code>True
 (3, 4)
-(3, 4)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b[<span class="number">0</span>,<span class="number">0</span>]=<span class="number">3</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+(3, 4)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b[<span class="number">0</span>,<span class="number">0</span>]=<span class="number">3</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 3  1  2  3]
  [ 4  5  6  7]
  [ 8  9 10 11]]
 [[ 3  1  2  3]
  [ 4  5  6  7]
- [ 8  9 10 11]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line">b = a</span><br><span class="line"><span class="built_in">print</span>(b <span class="keyword">is</span> a) </span><br><span class="line">b.reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(b.shape)</span><br><span class="line"><span class="built_in">print</span>(a.shape) <span class="comment"># reshape是创建一个新的对象</span></span><br></pre></td></tr></table></figure>
+ [ 8  9 10 11]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line">b = a</span><br><span class="line"><span class="built_in">print</span>(b <span class="keyword">is</span> a) </span><br><span class="line">b.reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(b.shape)</span><br><span class="line"><span class="built_in">print</span>(a.shape) <span class="comment"># reshape是创建一个新的对象</span></span><br></pre></td></tr></table></figure>
 <pre><code>True
 (12,)
-(12,)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">change_value</span>(<span class="params">x</span>):</span><br><span class="line">    x[<span class="number">0</span>,<span class="number">0</span>]=<span class="number">1</span></span><br><span class="line"></span><br><span class="line">a=np.arange(<span class="number">4</span>).reshape(<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line">change_value(a)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+(12,)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">change_value</span>(<span class="params">x</span>):</span><br><span class="line">    x[<span class="number">0</span>,<span class="number">0</span>]=<span class="number">1</span></span><br><span class="line"></span><br><span class="line">a=np.arange(<span class="number">4</span>).reshape(<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line">change_value(a)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
 <pre><code>[[0 1]
  [2 3]]
 [[1 1]
- [2 3]]
-</code></pre><h3 id="3-2-视图或浅拷贝"><a href="#3-2-视图或浅拷贝" class="headerlink" title="3.2 视图或浅拷贝"></a>3.2 视图或浅拷贝</h3><p>不同的数组可以共享同一组数据。比如对于数组a，可以创建它的一个视图b，则b就是一个新的数组对象，但与a共享数据。所以，浅拷贝就是只对原数组拷贝数组的相关属性，但是不拷贝数据。</p>
-<ul>
-<li>可以直接通过ndarray.view()函数来创建一个新视图</li>
-<li>数组的切片也是视图</li>
-<li>一些返回新数组对象的函数是浅拷贝，比如reshape()</li>
-</ul>
+ [2 3]]</code></pre>
+<h3 id="视图或浅拷贝">3.2 视图或浅拷贝</h3>
+<p>不同的数组可以共享同一组数据。比如对于数组a，可以创建它的一个视图b，则b就是一个新的数组对象，但与a共享数据。所以，浅拷贝就是只对原数组拷贝数组的相关属性，但是不拷贝数据。
++ 可以直接通过ndarray.view()函数来创建一个新视图 + 数组的切片也是视图 +
+一些返回新数组对象的函数是浅拷贝，比如reshape()</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line">b = a.view()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(b))  <span class="comment"># b是ndarray对象</span></span><br><span class="line"><span class="built_in">print</span>(b <span class="keyword">is</span> a)  <span class="comment"># b与a不是同一个对象</span></span><br><span class="line"><span class="built_in">print</span>(b.base <span class="keyword">is</span> a)  <span class="comment"># b共享a的数据</span></span><br><span class="line"><span class="built_in">print</span>(b.flags.owndata, a.flags.owndata)</span><br></pre></td></tr></table></figure>
 <pre><code>&lt;class &#39;numpy.ndarray&#39;&gt;
 False
 True
-False True
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(b.shape, a.shape)</span><br><span class="line">b.resize((<span class="number">3</span>,<span class="number">4</span>))</span><br><span class="line"><span class="built_in">print</span>(b.shape, a.shape)  <span class="comment"># b的数组属性与a不共享</span></span><br></pre></td></tr></table></figure>
+False True</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(b.shape, a.shape)</span><br><span class="line">b.resize((<span class="number">3</span>,<span class="number">4</span>))</span><br><span class="line"><span class="built_in">print</span>(b.shape, a.shape)  <span class="comment"># b的数组属性与a不共享</span></span><br></pre></td></tr></table></figure>
 <pre><code>(12,) (12,)
-(3, 4) (12,)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b[<span class="number">0</span>,<span class="number">0</span>]=<span class="number">1</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br><span class="line"><span class="built_in">print</span>(a)  <span class="comment"># b与a共享数据</span></span><br></pre></td></tr></table></figure>
+(3, 4) (12,)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b[<span class="number">0</span>,<span class="number">0</span>]=<span class="number">1</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br><span class="line"><span class="built_in">print</span>(a)  <span class="comment"># b与a共享数据</span></span><br></pre></td></tr></table></figure>
 <pre><code>[[ 1  1  2  3]
  [ 4  5  6  7]
  [ 8  9 10 11]]
-[ 1  1  2  3  4  5  6  7  8  9 10 11]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">b = a[:,<span class="number">1</span>:<span class="number">3</span>]</span><br><span class="line"><span class="built_in">print</span>(b)</span><br></pre></td></tr></table></figure>
+[ 1  1  2  3  4  5  6  7  8  9 10 11]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">b = a[:,<span class="number">1</span>:<span class="number">3</span>]</span><br><span class="line"><span class="built_in">print</span>(b)</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 1  2]
  [ 5  6]
- [ 9 10]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b[<span class="number">0</span>,<span class="number">0</span>]=<span class="number">999</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+ [ 9 10]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b[<span class="number">0</span>,<span class="number">0</span>]=<span class="number">999</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
 <pre><code>[[999   2]
  [  5   6]
  [  9  10]]
 [[  0 999   2   3]
  [  4   5   6   7]
- [  8   9  10  11]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line">b = a.reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(b <span class="keyword">is</span> a)</span><br><span class="line">b[<span class="number">0</span>,<span class="number">0</span>]=<span class="number">999</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+ [  8   9  10  11]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line">b = a.reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(b <span class="keyword">is</span> a)</span><br><span class="line">b[<span class="number">0</span>,<span class="number">0</span>]=<span class="number">999</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
 <pre><code>False
 [[999   1   2   3]
  [  4   5   6   7]
  [  8   9  10  11]]
-[999   1   2   3   4   5   6   7   8   9  10  11]
-</code></pre><h3 id="3-3-深拷贝"><a href="#3-3-深拷贝" class="headerlink" title="3.3 深拷贝"></a>3.3 深拷贝</h3><ul>
-<li>ndarray.copy()函数可以完全复制原数组的属性和数据<ul>
+[999   1   2   3   4   5   6   7   8   9  10  11]</code></pre>
+<h3 id="深拷贝">3.3 深拷贝</h3>
+<ul>
+<li>ndarray.copy()函数可以完全复制原数组的属性和数据</li>
 <li>有时，如果我们只需要一个巨大数组的一部分切片，那么就可以对原数组切片后使用copy()，然后释放原数组的内存(del)</li>
-</ul>
-</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line">b = a.copy()</span><br><span class="line"><span class="built_in">print</span>(b <span class="keyword">is</span> a)</span><br><span class="line"><span class="built_in">print</span>(b.base <span class="keyword">is</span> a)</span><br><span class="line">b[<span class="number">0</span>]=<span class="number">999</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
 <pre><code>False
 False
 [999   1   2   3   4   5   6   7   8   9  10  11]
-[ 0  1  2  3  4  5  6  7  8  9 10 11]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">10000</span>)</span><br><span class="line">b = a[:<span class="number">100</span>].copy()</span><br><span class="line"><span class="keyword">del</span> a</span><br><span class="line"><span class="built_in">print</span>(b)</span><br></pre></td></tr></table></figure>
+[ 0  1  2  3  4  5  6  7  8  9 10 11]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">10000</span>)</span><br><span class="line">b = a[:<span class="number">100</span>].copy()</span><br><span class="line"><span class="keyword">del</span> a</span><br><span class="line"><span class="built_in">print</span>(b)</span><br></pre></td></tr></table></figure>
 <pre><code>[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
  24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
  48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
  72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
- 96 97 98 99]
-</code></pre><h2 id="4-广播规则"><a href="#4-广播规则" class="headerlink" title="4. 广播规则"></a>4. 广播规则</h2><p>元素级的数组运算要求两个数组的形状完全相等，但是有了Numpy的广播机制，就可以放宽这个约束。</p>
-<p>广播机制的一般规则如下：</p>
+ 96 97 98 99]</code></pre>
+<h2 id="广播规则">4. 广播规则</h2>
+<p>元素级的数组运算要求两个数组的形状完全相等，但是有了Numpy的广播机制，就可以放宽这个约束。</p>
+<p>广播机制的一般规则如下： +
+对参与运算的两个数组，Numpy会比较两者的形状是否兼容 +
+从右到左地依次比较它们的维度大小 +
+两者的维度个数不需要相等，对于缺失的维度，用1补充 +
+两个数组在某个维度兼容，当且仅当两个数组该维度的大小相等，或者其中一个数组维度等于1
++ 只有两个数组在所有维度上都兼容，两个数组的形状才算兼容</p>
 <ul>
-<li><p>对参与运算的两个数组，Numpy会比较两者的形状是否兼容</p>
-<ul>
-<li>从右到左地依次比较它们的维度大小</li>
-<li>两者的维度个数不需要相等，对于缺失的维度，用1补充</li>
-<li>两个数组在某个维度兼容，当且仅当两个数组该维度的大小相等，或者其中一个数组维度等于1</li>
-<li>只有两个数组在所有维度上都兼容，两个数组的形状才算兼容</li>
-</ul>
-</li>
-<li><p>当两个数组的形状兼容时，就会进行广播</p>
-<ul>
+<li>当两个数组的形状兼容时，就会进行广播</li>
 <li>从右到左依次比较两个数组的维度大小，维度大小为1的需要映射到另一个较大的维度大小</li>
 <li>最终结果的维度个数=输入数组中最大的维度个数，并且结果的每个维度大小=输入数组对应维度上最大的维度大小</li>
-</ul>
-</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">20</span>).reshape(<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">b = <span class="number">1</span>  </span><br><span class="line"><span class="built_in">print</span>(a+b)  <span class="comment">#标量广播到(4,5)</span></span><br></pre></td></tr></table></figure>
 <pre><code>[[ 1  2  3  4  5]
  [ 6  7  8  9 10]
  [11 12 13 14 15]
- [16 17 18 19 20]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b = np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])</span><br><span class="line"><span class="built_in">print</span>(a+b)  <span class="comment">#wrong，因为(4,)无法广播到(4,5)，广播机制是从右到左对齐的</span></span><br></pre></td></tr></table></figure>
+ [16 17 18 19 20]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b = np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])</span><br><span class="line"><span class="built_in">print</span>(a+b)  <span class="comment">#wrong，因为(4,)无法广播到(4,5)，广播机制是从右到左对齐的</span></span><br></pre></td></tr></table></figure>
 <pre><code>---------------------------------------------------------------------------
 
 ValueError                                Traceback (most recent call last)
@@ -966,26 +1216,26 @@ Cell In [113], line 2
 ----&gt; 2 print(a+b)
 
 
-ValueError: operands could not be broadcast together with shapes (4,5) (4,) 
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b = np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])</span><br><span class="line"><span class="built_in">print</span>(a+b)</span><br></pre></td></tr></table></figure>
+ValueError: operands could not be broadcast together with shapes (4,5) (4,) </code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b = np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])</span><br><span class="line"><span class="built_in">print</span>(a+b)</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 1  2  3  4  5]
  [ 6  7  8  9 10]
  [11 12 13 14 15]
- [16 17 18 19 20]]
-</code></pre><h2 id="5-高级索引"><a href="#5-高级索引" class="headerlink" title="5. 高级索引"></a>5. 高级索引</h2><p>numpy中数组除了可以用Integer和切片进行索引，还支持更多索引方式（python序列不支持），包括用整型数组和布尔数组进行索引。</p>
-<h3 id="5-1-整型数组索引"><a href="#5-1-整型数组索引" class="headerlink" title="5.1 整型数组索引"></a>5.1 整型数组索引</h3><ul>
-<li>ndarray可以用ndarray进行索引</li>
-<li>如果使用单个数组进行索引，它只对被索引数组的第0维度进行索引。比如A的shape为(2,3,4)，索引数组B的shape为(3,3)并且每个元素的取值都是[0,2)区间内的整型，那么A[B]的形状为(3,3,3,4)</li>
-<li>如果想对数组的多个维度进行索引，就需要多个索引数组，它们的形状必须相同，并且这些索引数组对应位置上的元素组成一个完整的索引。</li>
-</ul>
+ [16 17 18 19 20]]</code></pre>
+<h2 id="高级索引">5. 高级索引</h2>
+<p>numpy中数组除了可以用Integer和切片进行索引，还支持更多索引方式（python序列不支持），包括用整型数组和布尔数组进行索引。
+### 5.1 整型数组索引 + ndarray可以用ndarray进行索引 +
+如果使用单个数组进行索引，它只对被索引数组的第0维度进行索引。比如A的shape为(2,3,4)，索引数组B的shape为(3,3)并且每个元素的取值都是[0,2)区间内的整型，那么A[B]的形状为(3,3,3,4)
++
+如果想对数组的多个维度进行索引，就需要多个索引数组，它们的形状必须相同，并且这些索引数组对应位置上的元素组成一个完整的索引。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">a = np.arange(<span class="number">12</span>)</span><br><span class="line">b = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line"><span class="built_in">print</span>(a[b])</span><br><span class="line"><span class="built_in">print</span>(a[b].shape)</span><br></pre></td></tr></table></figure>
 <pre><code>[1 2 3]
-(3,)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">c = np.array([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],[<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]])</span><br><span class="line"><span class="built_in">print</span>(a[c])</span><br><span class="line"><span class="built_in">print</span>(a[c].shape)</span><br></pre></td></tr></table></figure>
+(3,)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">c = np.array([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],[<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]])</span><br><span class="line"><span class="built_in">print</span>(a[c])</span><br><span class="line"><span class="built_in">print</span>(a[c].shape)</span><br></pre></td></tr></table></figure>
 <pre><code>[[1 2 3]
  [4 5 6]]
-(2, 3)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">palatte = np.array([[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>],</span><br><span class="line">          [<span class="number">255</span>,<span class="number">0</span>,<span class="number">0</span>],</span><br><span class="line">          [<span class="number">0</span>,<span class="number">255</span>,<span class="number">0</span>],</span><br><span class="line">          [<span class="number">0</span>,<span class="number">0</span>,<span class="number">255</span>],</span><br><span class="line">          [<span class="number">255</span>,<span class="number">255</span>,<span class="number">255</span>]])</span><br><span class="line"></span><br><span class="line">pixel = np.array([[<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],</span><br><span class="line">        [<span class="number">3</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">1</span>],</span><br><span class="line">        [<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">0</span>],</span><br><span class="line">        [<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>]])</span><br><span class="line"></span><br><span class="line">image = palatte[pixel]</span><br><span class="line"><span class="built_in">print</span>(image)</span><br><span class="line"><span class="built_in">print</span>(image.shape)</span><br></pre></td></tr></table></figure>
+(2, 3)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">palatte = np.array([[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>],</span><br><span class="line">          [<span class="number">255</span>,<span class="number">0</span>,<span class="number">0</span>],</span><br><span class="line">          [<span class="number">0</span>,<span class="number">255</span>,<span class="number">0</span>],</span><br><span class="line">          [<span class="number">0</span>,<span class="number">0</span>,<span class="number">255</span>],</span><br><span class="line">          [<span class="number">255</span>,<span class="number">255</span>,<span class="number">255</span>]])</span><br><span class="line"></span><br><span class="line">pixel = np.array([[<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],</span><br><span class="line">        [<span class="number">3</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">1</span>],</span><br><span class="line">        [<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">0</span>],</span><br><span class="line">        [<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>]])</span><br><span class="line"></span><br><span class="line">image = palatte[pixel]</span><br><span class="line"><span class="built_in">print</span>(image)</span><br><span class="line"><span class="built_in">print</span>(image.shape)</span><br></pre></td></tr></table></figure>
 <pre><code>[[[  0   0   0]
   [255   0   0]
   [  0 255   0]
@@ -1005,40 +1255,36 @@ ValueError: operands could not be broadcast together with shapes (4,5) (4,)
   [  0   0 255]
   [  0 255   0]
   [255   0   0]]]
-(4, 4, 3)
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">20</span>).reshape(<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">i = np.array([[<span class="number">3</span>,<span class="number">2</span>],[<span class="number">1</span>,<span class="number">3</span>]])  <span class="comment">#第1维度的索引</span></span><br><span class="line">j = np.array([[<span class="number">3</span>,<span class="number">4</span>],[<span class="number">0</span>,<span class="number">1</span>]])  <span class="comment">#第2维度的索引</span></span><br><span class="line"><span class="built_in">print</span>(a[i,j])</span><br><span class="line"><span class="built_in">print</span>(a[i,j].shape)</span><br></pre></td></tr></table></figure>
+(4, 4, 3)</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">20</span>).reshape(<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">i = np.array([[<span class="number">3</span>,<span class="number">2</span>],[<span class="number">1</span>,<span class="number">3</span>]])  <span class="comment">#第1维度的索引</span></span><br><span class="line">j = np.array([[<span class="number">3</span>,<span class="number">4</span>],[<span class="number">0</span>,<span class="number">1</span>]])  <span class="comment">#第2维度的索引</span></span><br><span class="line"><span class="built_in">print</span>(a[i,j])</span><br><span class="line"><span class="built_in">print</span>(a[i,j].shape)</span><br></pre></td></tr></table></figure>
 <pre><code>[[18 14]
  [ 5 16]]
-(2, 2)
-</code></pre><h3 id="5-2-布尔数组索引"><a href="#5-2-布尔数组索引" class="headerlink" title="5.2 布尔数组索引"></a>5.2 布尔数组索引</h3><p>在整型数组索引中，我们需要提供索引数组，来定位想要Pick的元素。而用布尔数组索引时，我们需要显式地说明我们想要哪些元素，不想要哪些元素。</p>
-<ul>
-<li>第一种方式是，提供一个与原数组shape完全相等的布尔数组作为索引<ul>
-<li>用布尔数组去索引原数组，返回的是1维数组</li>
-<li>布尔数组索引在赋值时非常好用</li>
-</ul>
-</li>
-<li>第二种方式是，提供若干个一维的布尔数组，每个一维的布尔数组索引一个维度，其长度需要与原数组对应维度大小相等。</li>
-</ul>
+(2, 2)</code></pre>
+<h3 id="布尔数组索引">5.2 布尔数组索引</h3>
+<p>在整型数组索引中，我们需要提供索引数组，来定位想要Pick的元素。而用布尔数组索引时，我们需要显式地说明我们想要哪些元素，不想要哪些元素。
++ 第一种方式是，提供一个与原数组shape完全相等的布尔数组作为索引 +
+用布尔数组去索引原数组，返回的是1维数组 + 布尔数组索引在赋值时非常好用 +
+第二种方式是，提供若干个一维的布尔数组，每个一维的布尔数组索引一个维度，其长度需要与原数组对应维度大小相等。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = np.arange(<span class="number">12</span>).reshape(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">b = a&gt;<span class="number">4</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br></pre></td></tr></table></figure>
 <pre><code>[[False False False False]
  [False  True  True  True]
- [ True  True  True  True]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a[b]</span><br></pre></td></tr></table></figure>
-<pre><code>array([ 5,  6,  7,  8,  9, 10, 11])
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a[b] = -<span class="number">1</span></span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+ [ True  True  True  True]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a[b]</span><br></pre></td></tr></table></figure>
+<pre><code>array([ 5,  6,  7,  8,  9, 10, 11])</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a[b] = -<span class="number">1</span></span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 0  1  2  3]
  [ 4 -1 -1 -1]
- [-1 -1 -1 -1]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b = np.array([<span class="literal">False</span>,<span class="literal">True</span>,<span class="literal">True</span>]) <span class="comment">#第0维度布尔索引</span></span><br><span class="line">a[b]</span><br></pre></td></tr></table></figure>
+ [-1 -1 -1 -1]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">b = np.array([<span class="literal">False</span>,<span class="literal">True</span>,<span class="literal">True</span>]) <span class="comment">#第0维度布尔索引</span></span><br><span class="line">a[b]</span><br></pre></td></tr></table></figure>
 <pre><code>array([[ 4, -1, -1, -1],
-       [-1, -1, -1, -1]])
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">c = np.array([<span class="literal">False</span>,<span class="literal">True</span>,<span class="literal">False</span>,<span class="literal">True</span>]) <span class="comment">#第1维度布尔索引</span></span><br><span class="line"><span class="built_in">print</span>(a[:,c])</span><br></pre></td></tr></table></figure>
+       [-1, -1, -1, -1]])</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">c = np.array([<span class="literal">False</span>,<span class="literal">True</span>,<span class="literal">False</span>,<span class="literal">True</span>]) <span class="comment">#第1维度布尔索引</span></span><br><span class="line"><span class="built_in">print</span>(a[:,c])</span><br></pre></td></tr></table></figure>
 <pre><code>[[ 1  3]
  [-1 -1]
- [-1 -1]]
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a[b,c] <span class="comment">#结果只有2个元素，因为这里多个1维布尔数组进行索引的逻辑，和多个整型数组进行索引的逻辑相同</span></span><br><span class="line"><span class="comment"># 将每个布尔数组里为True的index抽取出来作为索引，这些1维索引的形状必须相同</span></span><br></pre></td></tr></table></figure>
-<pre><code>array([-1, -1])
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a[b,[<span class="literal">False</span>,<span class="literal">True</span>,<span class="literal">True</span>,<span class="literal">True</span>]] <span class="comment">#(2,)和(3,) 形状不同，不能进行索引</span></span><br></pre></td></tr></table></figure>
+ [-1 -1]]</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a[b,c] <span class="comment">#结果只有2个元素，因为这里多个1维布尔数组进行索引的逻辑，和多个整型数组进行索引的逻辑相同</span></span><br><span class="line"><span class="comment"># 将每个布尔数组里为True的index抽取出来作为索引，这些1维索引的形状必须相同</span></span><br></pre></td></tr></table></figure>
+<pre><code>array([-1, -1])</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a[b,[<span class="literal">False</span>,<span class="literal">True</span>,<span class="literal">True</span>,<span class="literal">True</span>]] <span class="comment">#(2,)和(3,) 形状不同，不能进行索引</span></span><br></pre></td></tr></table></figure>
 <pre><code>---------------------------------------------------------------------------
 
 IndexError                                Traceback (most recent call last)
@@ -1047,10 +1293,10 @@ Cell In [14], line 1
 ----&gt; 1 a[b,[False,True,True,True]]
 
 
-IndexError: shape mismatch: indexing arrays could not be broadcast together with shapes (2,) (3,) 
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a[b,[<span class="literal">False</span>,<span class="literal">True</span>,<span class="literal">False</span>,<span class="literal">False</span>]] <span class="comment">#(2,)和scalar，scalar可以广播到(2,)</span></span><br></pre></td></tr></table></figure>
-<pre><code>array([-1, -1])
-</code></pre><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+IndexError: shape mismatch: indexing arrays could not be broadcast together with shapes (2,) (3,) </code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a[b,[<span class="literal">False</span>,<span class="literal">True</span>,<span class="literal">False</span>,<span class="literal">False</span>]] <span class="comment">#(2,)和scalar，scalar可以广播到(2,)</span></span><br></pre></td></tr></table></figure>
+<pre><code>array([-1, -1])</code></pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>代码</category>
