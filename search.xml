@@ -1,10 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Attention Is All You Need</title>
-    <url>/2023/08/18/Attention-Is-All-You-Need/</url>
-    <content><![CDATA[
+    <title>GAN: Generative Adversarial Nets</title>
+    <url>/2023/08/10/GAN-Generative-Adversarial-Nets/</url>
+    <content><![CDATA[<h1 id="gan-generative-adversarial-nets">GAN: Generative Adversarial
+Nets</h1>
+<h2 id="标题及作者">1. 标题及作者</h2>
+<ul>
+<li>模型的两大类：判别模型，生成模型
+<ul>
+<li>判别模型：预测、分类。</li>
+<li>生成模型：世界是通过采样不同的分布形成的，如果你要生成某个数据，就是要在它的分布上进行采样。所以生成模型的目标就是拟合到某种数据的分布。</li>
+</ul></li>
+</ul>
+<h2 id="摘要">2. 摘要</h2>
+<p>GAN是通过一个adversial
+process来预测生成模型。GAN会同时训练两个模型<span
+class="math inline">\(G\)</span>和<span
+class="math inline">\(D\)</span>，生成模型<span
+class="math inline">\(G\)</span>的目标是捕捉到真实的数据分布，判别模型<span
+class="math inline">\(D\)</span>的目标是分辨一个数据是否来自真实的数据分布。训练过程中，<span
+class="math inline">\(D\)</span>的目标是提高分类的准确率，<span
+class="math inline">\(G\)</span>的目标是最大化<span
+class="math inline">\(D\)</span>的错误率。最终使得<span
+class="math inline">\(G\)</span>找到真实的数据分布，即<span
+class="math inline">\(G\)</span>捕捉的数据分布与真实数据分布完全重合，此时<span
+class="math inline">\(D\)</span>对每个输入的预测都为0.5（等于随机预测）。用MLP来构建<span
+class="math inline">\(G\)</span>和<span
+class="math inline">\(D\)</span>，使用反向传播和梯度下降来训练这两个模型，而不使用传统的生成模型算法（如马尔科夫链）。</p>
+<h2 id="引言">3. 引言</h2>
+<h3 id="issue">3.1 Issue</h3>
+<ul>
+<li>Discriminative model已经取得了很大进展</li>
+<li>但是Generative
+model还没有取得同样的进展，因为传统方法是要对未知的数据分布进行近似，然后计算似然函数。但是这种近似给计算带来了很多困难。</li>
+<li>不使用似然函数了，使用一个对抗策略的框架</li>
+</ul>
+<h3 id="framework">3.2 Framework</h3>
+<ul>
+<li><p>framework
+basisi就是双人对抗，同时训练两个模型，一个负责捕捉真是数据分布，一个负责分辨数据是否来自真实分布，直到生成模型找到真实分布。</p></li>
+<li><p>generative
+model：是一个MLP，输入是随机噪音（通常属于高斯分布），这个MLP可以将产生噪音的分布映射到我们想要的任何数据的分布上去</p></li>
+<li><p>discriminative
+model：也是一个MLP，输入一个数据，输出一个scalar，用于判别输入的数据是否来自真实数据分布</p></li>
+<li><p>以上这种G和D都是MLP的special case，称为adversarial
+nets，在adversarial
+nets下，可以利用误差的反向传播来训练模型，不需要对数据做复杂采样或对分布做复杂的近似。</p></li>
+</ul>
+<h2 id="相关工作">4. 相关工作</h2>
+<ul>
+<li>曾经主流的方法是显式地构建目标数据的概率分布，概率分布中提供一些可学习的参数，然后根据数据样本通过最大化其对数似然函数来学习参数。例如，波兹曼机。
+<ul>
+<li>问题：当数据维度很高时，概率分布难以用最大似然函数来计算，因为计算非常困难；另外，真实数据的分布有时很难构造</li>
+</ul></li>
+<li>因此催生了另一类方法：generative
+machines，不再显式地构造概率分布，而是利用模型去近似概率分布。例如，VAE，NCE。
+<ul>
+<li>问题：不能知道数据分布的显式表达，但是可以利用反向传播、梯度下降来更新参数，使计算非常简单。</li>
+</ul></li>
+</ul>
+<h2 id="模型">5. 模型</h2>
+<ul>
+<li>generator <span class="math inline">\(G\)</span>:
+为了让生成器学习数据<span
+class="math inline">\(x\)</span>的分布（生成器学到的分布用<span
+class="math inline">\(p_g\)</span>表示），我们在输入噪音<span
+class="math inline">\(z\)</span>上定义一个先验分布<span
+class="math inline">\(p_z(z)\)</span>（一般是高斯分布），然后通过一个函数<span
+class="math inline">\(G(z;\theta_g)\)</span>表示从先验分布到目标分布的映射，其中<span
+class="math inline">\(G\)</span>是一个可微分函数，GAN中用MLP构建，其参数为<span
+class="math inline">\(\theta_g\)</span>
+<ul>
+<li>论文中是用scalar来表示<span class="math inline">\(z\)</span>和<span
+class="math inline">\(x\)</span>，在实际中，比如生成4k图像时，图像有八百万个像素，每个像素表示为一个随机变量，每个变量都服从一个分布，整个图像服从一个联合分布；如果隐向量<span
+class="math inline">\(z\)</span>设定为100维（超参数，根据生成数据的复杂度而选择，两者不需要相等），那么就需要初始化100个随机变量的分布；最终生成器就是一个初始输入为100维，最终输出为八百万维的MLP。</li>
+</ul></li>
+<li>discriminator <span class="math inline">\(D\)</span>:
+定义另一个MLP模型<span
+class="math inline">\(D(x;\theta_d)\)</span>，输入为数据<span
+class="math inline">\(x\)</span>，最终输出一个scalar，这个scalar表示<span
+class="math inline">\(x\)</span>来自真实数据分布的概率。</li>
+<li>loss function:
+<ul>
+<li>同时训练两个模型，对<span
+class="math inline">\(D\)</span>，我们希望它能尽可能地分辨正确<span
+class="math inline">\(x\)</span>是否来自真是数据分布；对<span
+class="math inline">\(G\)</span>，我们希望它生成的数据能尽可能地被<span
+class="math inline">\(D\)</span>判定为真实数据。</li>
+<li>损失函数：
+<ul>
+<li>先看内部对<span class="math inline">\(D\)</span>的max：当<span
+class="math inline">\(D\)</span>达到理想效果时，<span
+class="math inline">\(D(x)\)</span>为1，函数的第一部分为0，<span
+class="math inline">\(D(G(z))\)</span>为0，函数的第二部分为0，求和为0；如果不是理想效果，则函数结果为负。因此为了让<span
+class="math inline">\(D\)</span>达到理想效果，应该让函数尽可能大</li>
+<li>然后看外部对<span class="math inline">\(G\)</span>的min：与<span
+class="math inline">\(G\)</span>有关的只有函数的后一项，当<span
+class="math inline">\(G\)</span>达到理想效果时，<span
+class="math inline">\(D(G(z))\)</span>为1，则函数的后一项为负无穷，函数求和为负无穷。因此为了让<span
+class="math inline">\(G\)</span>达到理想效果，应该让函数尽可能小</li>
+<li>损失函数公式如下所示：</li>
+</ul></li>
+</ul></li>
+</ul>
+<p><img
+src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-24-06.png" /></p>
+<ul>
+<li>学习过程：
+<ul>
+<li>如图所示，初始时<span class="math inline">\(D\)</span>和<span
+class="math inline">\(G\)</span>的效果都有较大偏差。随后在每次迭代中，<span
+class="math inline">\(D\)</span>先优化，学到真实数据和<span
+class="math inline">\(G\)</span>生成数据的区别；然后<span
+class="math inline">\(G\)</span>优化数据分布，减小<span
+class="math inline">\(D\)</span>的分类准确率。经过多次迭代后，<span
+class="math inline">\(G\)</span>生成数据的分布和真实数据分布完全重合。</li>
+</ul></li>
+</ul>
+<p><img
+src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-38-27.png" /></p>
+<ul>
+<li>算法描述：</li>
+</ul>
+<p><img
+src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-39-19.png" /></p>
+<h2 id="优缺点">6. 优缺点</h2>
+<ul>
+<li><p>GAN不需要显式地表示数据分布，因而可以利用网络模型拟合非常复杂的数据，计算上也方便很多</p></li>
+<li><p>GAN的训练非常不稳定，因为它需要每次迭代中<span
+class="math inline">\(G\)</span>和<span
+class="math inline">\(D\)</span>的能力相当，不能某个模型的能力过强，否则另一个模型无法收敛；但要求每次迭代时<span
+class="math inline">\(D\)</span>要在当前的<span
+class="math inline">\(G\)</span>模型下分辨能力有优化，否则<span
+class="math inline">\(G\)</span>也无法学到很好的分布；另外，GAN的训练不需要推理，<span
+class="math inline">\(D\)</span>和<span
+class="math inline">\(G\)</span>两个模型是否都收敛了比较难判断。</p></li>
+<li><p>GAN是半监督学习的灵感之一，因为它的数据生成是无监督的，即数据不需要标记；但损失函数是有监督的，唯一的监督信息是数据来源于真实数据分布还是生成器，而这个监督信息是训练时自己定义的。</p></li>
+</ul>
 ]]></content>
+      <categories>
+        <category>沐神开组会</category>
+      </categories>
+      <tags>
+        <tag>GAN</tag>
+        <tag>李沐</tag>
+      </tags>
   </entry>
   <entry>
     <title>BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</title>
@@ -146,6 +287,12 @@ LM使模型能够利用上下文信息，从而得到更好的token级的特征�
         <tag>李沐</tag>
         <tag>BERT</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Attention Is All You Need</title>
+    <url>/2023/08/18/Attention-Is-All-You-Need/</url>
+    <content><![CDATA[
+]]></content>
   </entry>
   <entry>
     <title>CV上分思路和技巧</title>
@@ -612,153 +759,6 @@ alt="image-20230810153359586" />
       <tags>
         <tag>李沐</tag>
         <tag>GNN</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>GAN: Generative Adversarial Nets</title>
-    <url>/2023/08/10/GAN-Generative-Adversarial-Nets/</url>
-    <content><![CDATA[<h1 id="gan-generative-adversarial-nets">GAN: Generative Adversarial
-Nets</h1>
-<h2 id="标题及作者">1. 标题及作者</h2>
-<ul>
-<li>模型的两大类：判别模型，生成模型
-<ul>
-<li>判别模型：预测、分类。</li>
-<li>生成模型：世界是通过采样不同的分布形成的，如果你要生成某个数据，就是要在它的分布上进行采样。所以生成模型的目标就是拟合到某种数据的分布。</li>
-</ul></li>
-</ul>
-<h2 id="摘要">2. 摘要</h2>
-<p>GAN是通过一个adversial
-process来预测生成模型。GAN会同时训练两个模型<span
-class="math inline">\(G\)</span>和<span
-class="math inline">\(D\)</span>，生成模型<span
-class="math inline">\(G\)</span>的目标是捕捉到真实的数据分布，判别模型<span
-class="math inline">\(D\)</span>的目标是分辨一个数据是否来自真实的数据分布。训练过程中，<span
-class="math inline">\(D\)</span>的目标是提高分类的准确率，<span
-class="math inline">\(G\)</span>的目标是最大化<span
-class="math inline">\(D\)</span>的错误率。最终使得<span
-class="math inline">\(G\)</span>找到真实的数据分布，即<span
-class="math inline">\(G\)</span>捕捉的数据分布与真实数据分布完全重合，此时<span
-class="math inline">\(D\)</span>对每个输入的预测都为0.5（等于随机预测）。用MLP来构建<span
-class="math inline">\(G\)</span>和<span
-class="math inline">\(D\)</span>，使用反向传播和梯度下降来训练这两个模型，而不使用传统的生成模型算法（如马尔科夫链）。</p>
-<h2 id="引言">3. 引言</h2>
-<h3 id="issue">3.1 Issue</h3>
-<ul>
-<li>Discriminative model已经取得了很大进展</li>
-<li>但是Generative
-model还没有取得同样的进展，因为传统方法是要对未知的数据分布进行近似，然后计算似然函数。但是这种近似给计算带来了很多困难。</li>
-<li>不使用似然函数了，使用一个对抗策略的框架</li>
-</ul>
-<h3 id="framework">3.2 Framework</h3>
-<ul>
-<li><p>framework
-basisi就是双人对抗，同时训练两个模型，一个负责捕捉真是数据分布，一个负责分辨数据是否来自真实分布，直到生成模型找到真实分布。</p></li>
-<li><p>generative
-model：是一个MLP，输入是随机噪音（通常属于高斯分布），这个MLP可以将产生噪音的分布映射到我们想要的任何数据的分布上去</p></li>
-<li><p>discriminative
-model：也是一个MLP，输入一个数据，输出一个scalar，用于判别输入的数据是否来自真实数据分布</p></li>
-<li><p>以上这种G和D都是MLP的special case，称为adversarial
-nets，在adversarial
-nets下，可以利用误差的反向传播来训练模型，不需要对数据做复杂采样或对分布做复杂的近似。</p></li>
-</ul>
-<h2 id="相关工作">4. 相关工作</h2>
-<ul>
-<li>曾经主流的方法是显式地构建目标数据的概率分布，概率分布中提供一些可学习的参数，然后根据数据样本通过最大化其对数似然函数来学习参数。例如，波兹曼机。
-<ul>
-<li>问题：当数据维度很高时，概率分布难以用最大似然函数来计算，因为计算非常困难；另外，真实数据的分布有时很难构造</li>
-</ul></li>
-<li>因此催生了另一类方法：generative
-machines，不再显式地构造概率分布，而是利用模型去近似概率分布。例如，VAE，NCE。
-<ul>
-<li>问题：不能知道数据分布的显式表达，但是可以利用反向传播、梯度下降来更新参数，使计算非常简单。</li>
-</ul></li>
-</ul>
-<h2 id="模型">5. 模型</h2>
-<ul>
-<li>generator <span class="math inline">\(G\)</span>:
-为了让生成器学习数据<span
-class="math inline">\(x\)</span>的分布（生成器学到的分布用<span
-class="math inline">\(p_g\)</span>表示），我们在输入噪音<span
-class="math inline">\(z\)</span>上定义一个先验分布<span
-class="math inline">\(p_z(z)\)</span>（一般是高斯分布），然后通过一个函数<span
-class="math inline">\(G(z;\theta_g)\)</span>表示从先验分布到目标分布的映射，其中<span
-class="math inline">\(G\)</span>是一个可微分函数，GAN中用MLP构建，其参数为<span
-class="math inline">\(\theta_g\)</span>
-<ul>
-<li>论文中是用scalar来表示<span class="math inline">\(z\)</span>和<span
-class="math inline">\(x\)</span>，在实际中，比如生成4k图像时，图像有八百万个像素，每个像素表示为一个随机变量，每个变量都服从一个分布，整个图像服从一个联合分布；如果隐向量<span
-class="math inline">\(z\)</span>设定为100维（超参数，根据生成数据的复杂度而选择，两者不需要相等），那么就需要初始化100个随机变量的分布；最终生成器就是一个初始输入为100维，最终输出为八百万维的MLP。</li>
-</ul></li>
-<li>discriminator <span class="math inline">\(D\)</span>:
-定义另一个MLP模型<span
-class="math inline">\(D(x;\theta_d)\)</span>，输入为数据<span
-class="math inline">\(x\)</span>，最终输出一个scalar，这个scalar表示<span
-class="math inline">\(x\)</span>来自真实数据分布的概率。</li>
-<li>loss function:
-<ul>
-<li>同时训练两个模型，对<span
-class="math inline">\(D\)</span>，我们希望它能尽可能地分辨正确<span
-class="math inline">\(x\)</span>是否来自真是数据分布；对<span
-class="math inline">\(G\)</span>，我们希望它生成的数据能尽可能地被<span
-class="math inline">\(D\)</span>判定为真实数据。</li>
-<li>损失函数：
-<ul>
-<li>先看内部对<span class="math inline">\(D\)</span>的max：当<span
-class="math inline">\(D\)</span>达到理想效果时，<span
-class="math inline">\(D(x)\)</span>为1，函数的第一部分为0，<span
-class="math inline">\(D(G(z))\)</span>为0，函数的第二部分为0，求和为0；如果不是理想效果，则函数结果为负。因此为了让<span
-class="math inline">\(D\)</span>达到理想效果，应该让函数尽可能大</li>
-<li>然后看外部对<span class="math inline">\(G\)</span>的min：与<span
-class="math inline">\(G\)</span>有关的只有函数的后一项，当<span
-class="math inline">\(G\)</span>达到理想效果时，<span
-class="math inline">\(D(G(z))\)</span>为1，则函数的后一项为负无穷，函数求和为负无穷。因此为了让<span
-class="math inline">\(G\)</span>达到理想效果，应该让函数尽可能小</li>
-<li>损失函数公式如下所示：</li>
-</ul></li>
-</ul></li>
-</ul>
-<p><img
-src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-24-06.png" /></p>
-<ul>
-<li>学习过程：
-<ul>
-<li>如图所示，初始时<span class="math inline">\(D\)</span>和<span
-class="math inline">\(G\)</span>的效果都有较大偏差。随后在每次迭代中，<span
-class="math inline">\(D\)</span>先优化，学到真实数据和<span
-class="math inline">\(G\)</span>生成数据的区别；然后<span
-class="math inline">\(G\)</span>优化数据分布，减小<span
-class="math inline">\(D\)</span>的分类准确率。经过多次迭代后，<span
-class="math inline">\(G\)</span>生成数据的分布和真实数据分布完全重合。</li>
-</ul></li>
-</ul>
-<p><img
-src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-38-27.png" /></p>
-<ul>
-<li>算法描述：</li>
-</ul>
-<p><img
-src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-39-19.png" /></p>
-<h2 id="优缺点">6. 优缺点</h2>
-<ul>
-<li><p>GAN不需要显式地表示数据分布，因而可以利用网络模型拟合非常复杂的数据，计算上也方便很多</p></li>
-<li><p>GAN的训练非常不稳定，因为它需要每次迭代中<span
-class="math inline">\(G\)</span>和<span
-class="math inline">\(D\)</span>的能力相当，不能某个模型的能力过强，否则另一个模型无法收敛；但要求每次迭代时<span
-class="math inline">\(D\)</span>要在当前的<span
-class="math inline">\(G\)</span>模型下分辨能力有优化，否则<span
-class="math inline">\(G\)</span>也无法学到很好的分布；另外，GAN的训练不需要推理，<span
-class="math inline">\(D\)</span>和<span
-class="math inline">\(G\)</span>两个模型是否都收敛了比较难判断。</p></li>
-<li><p>GAN是半监督学习的灵感之一，因为它的数据生成是无监督的，即数据不需要标记；但损失函数是有监督的，唯一的监督信息是数据来源于真实数据分布还是生成器，而这个监督信息是训练时自己定义的。</p></li>
-</ul>
-]]></content>
-      <categories>
-        <category>沐神开组会</category>
-      </categories>
-      <tags>
-        <tag>李沐</tag>
-        <tag>GAN</tag>
       </tags>
   </entry>
   <entry>
