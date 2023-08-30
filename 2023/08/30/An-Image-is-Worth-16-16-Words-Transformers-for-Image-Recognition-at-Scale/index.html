@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>An Image is Worth 16*16 Words: Transformers for Image Recognition at Scale | Sunset's Citywalk</title><meta name="author" content="Sunset"><meta name="copyright" content="Sunset"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="An Image is Worth 16*16 Words: Transformers for Image Recognition at Scale 1. 标题  通过将image转换成sequence of “word embedding&quot;，将Transformer直接应用于大规模的图片分类任务  2. 引言 2.1 Issue &amp; Motivation 注意力模块在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="An Image is Worth 16*16 Words: Transformers for Image Recognition at Scale">
+<meta property="og:url" content="https://laaambs.github.io/2023/08/30/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/index.html">
+<meta property="og:site_name" content="Sunset&#39;s Citywalk">
+<meta property="og:description" content="An Image is Worth 16*16 Words: Transformers for Image Recognition at Scale 1. 标题  通过将image转换成sequence of “word embedding&quot;，将Transformer直接应用于大规模的图片分类任务  2. 引言 2.1 Issue &amp; Motivation 注意力模块在">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://laaambs.github.io/images/cover.jpg">
+<meta property="article:published_time" content="2023-08-30T04:08:33.000Z">
+<meta property="article:modified_time" content="2023-08-30T05:11:37.111Z">
+<meta property="article:author" content="Sunset">
+<meta property="article:tag" content="ViT">
+<meta property="article:tag" content="CV">
+<meta property="article:tag" content="Transformer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://laaambs.github.io/images/cover.jpg"><link rel="shortcut icon" href="/images/coffee_shop.png"><link rel="canonical" href="https://laaambs.github.io/2023/08/30/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Sunset","link":"链接: ","source":"来源: Sunset's Citywalk","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'mediumZoom',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'An Image is Worth 16*16 Words: Transformers for Image Recognition at Scale',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-30 13:11:37'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/rabbit.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/cover.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Sunset's Citywalk"><img class="site-icon" src="/images/coffee_shop.png"/><span class="site-name">Sunset's Citywalk</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">An Image is Worth 16*16 Words: Transformers for Image Recognition at Scale</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-30T04:08:33.000Z" title="发表于 2023-08-30 12:08:33">2023-08-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-08-30T05:11:37.111Z" title="更新于 2023-08-30 13:11:37">2023-08-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B2%90%E7%A5%9E%E5%BC%80%E7%BB%84%E4%BC%9A/">沐神开组会</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="An Image is Worth 16*16 Words: Transformers for Image Recognition at Scale"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1
+id="an-image-is-worth-1616-words-transformers-for-image-recognition-at-scale">An
+Image is Worth 16*16 Words: Transformers for Image Recognition at
+Scale</h1>
+<h2 id="标题">1. 标题</h2>
+<ul>
+<li>通过将image转换成sequence of “word
+embedding"，将Transformer直接应用于大规模的图片分类任务</li>
+</ul>
+<h2 id="引言">2. 引言</h2>
+<h3 id="issue-motivation">2.1 Issue &amp; Motivation</h3>
+<p>注意力模块在NLP领域获得很大成功</p>
+<ul>
+<li><p>BERT等模型影响了NLP任务的解决模式：预训练大模型然后在任务具体数据集上做微调，这类方式开始占据主导（即统一了模型架构）</p></li>
+<li><p>由于注意力模型的scalability（可伸缩性）和computational
+efficiency（计算效率），有很多工作是围绕构建更大更深的注意力模型来展开，在更大规模的数据集上做训练，以获得更好的预训练模型。由于数据量和模型规模的增长，在NLP领域注意力模型的性能还没有够到天花板。</p></li>
+</ul>
+<p>另一方面，注意力模型在CV领域的应用还非常有限</p>
+<ul>
+<li>CV领域的主导模型仍然是卷积网络，因为卷积网络的Inductive
+bias包括了平移不变性和局部性，本质上就匹配视觉任务；而注意力模块是为了解决序列任务</li>
+<li>将注意力模块应用到CV会遇到<strong>计算复杂度</strong>的困难：注意力模块的计算复杂度是<span
+class="math inline">\(O(n^2)\)</span>，其中<span
+class="math inline">\(n\)</span>是指序列长度。而如果要对二维图像应用注意力模块，<strong>naive
+solution</strong>是对每个pixel去进行global
+attention，而一个低分辨率的<span
+class="math inline">\(224\times224\)</span>的图片也包含了<span
+class="math inline">\(50,176\)</span>个像素，注意力模块的计算复杂度就有<span
+class="math inline">\(O(50176^2)\)</span>，这对算力来说是不可接受的，更不要提高分辨率的图片</li>
+<li>有一些工作在尝试将注意力模块应用到CV任务，但不够彻底：1.
+部分工作是将卷积网络与注意力结合；2.
+还有一部分工作使用注意力模块完全替换卷积网络，但是使用的是经过特殊设计的注意力模块（如基于local
+window的Stand
+alone，以及基于轴注意力的网络），但这些注意力模块不能充分利用GPU等硬件算力，无法像NLP领域实现scalability</li>
+</ul>
+<p>因此，本文提出直接将Transformer应用于CV的图片分类任务</p>
+<ul>
+<li>通过将图片分隔为patches，对每个patch映射为一个linear
+embedding，从而将整个图片转换为一个sequence of
+embeddings，输入进Transformer（即直接将一张图片转成特征序列）</li>
+<li>使用有监督学习的方式用Transformer来处理图片分类任务</li>
+</ul>
+<h3 id="contributions">2.2 Contributions</h3>
+<ol type="1">
+<li><p>通过将图片转换为特征序列，直接将Transformer模型应用于CV的分类任务</p></li>
+<li><p>Vision
+Transformer在中规模的数据集上，效果discouraging：比相同大小的ResNet的准确率低几个百分点（因为CNN本身包含inductive
+bias，而注意力只能靠学习）；然而，<strong>在更大规模的数据集上，Vision
+Transformer会打败CNN的inductive
+bias</strong>，在多个数据集上都可以取得SOTA的效果，并且迁移到下游任务时只需要更少的数据。</p></li>
+</ol>
+<h2 id="方法">3. 方法</h2>
+<p><img
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-08-59.png" /></p>
+<h3 id="输入输出">3.1 输入输出</h3>
+<p><strong>1. Patches Extraction</strong></p>
+<ul>
+<li>将图片划分成大小相等的patches，然后将patch拉平为向量，输入进可训练的全连接层，得到patch
+embedding</li>
+</ul>
+<p><strong>2. Classification Token</strong></p>
+<ul>
+<li>类似于BERT的[class]，我们在sequence of patch
+embeddings的前面准备一个同样大小的embedding，它在Transformer
+Encoder最后输出的对应状态就作为整个图片的语义表示，然后输入进分类头，进行分类</li>
+</ul>
+<p><strong>3. Postion Embedding</strong></p>
+<ul>
+<li>与BERT一样，我们也要对输入embedding加上position
+embedding。需要注意的是，随着图像分辨率和patch_size设置的不同，输入序列的长度也会发生变化（比如9宫格变成25宫格），那么position
+embedding也需要重新学习（虽然可以通过插值来缓解），这一点也是ViT的局限之一</li>
+</ul>
+<h3 id="模型架构">3.2 模型架构</h3>
+<p>ViT使用的完全与Transformer Encoder一样，只是在每个Encoder
+Layer里，laynorm放在block的前面。公式描述如下：</p>
+<p><img
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-35-30.png" /></p>
+<h2 id="实验">4. 实验</h2>
+<h3 id="设置">4.1 设置</h3>
+<p><strong>数据集</strong></p>
+<p>使用了三个不同规模的数据集做预训练：百万级的ImageNet，千万级的ImageNet-21k，以及亿级的JFT；使用了分类任务多个benchmark做微调：ImageNet，CIFAR
+10，CIFAR 100，Oxford-IIIT Pets，Oxford
+Flowers-102和VTAB（主要用于测试模型稳健性）</p>
+<p><strong>模型</strong></p>
+<p>使用了卷积模型（多种ResNet），ViT（不同规模）和hybrid模型（前面卷积后面ViT）</p>
+<p><img
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-38-22.png" /></p>
+<h3 id="实验-1">4.2 实验</h3>
+<p><strong>Benchmark上的SOTA比较</strong></p>
+<p>下表是不同规模的ViT经过不同规模的与训练后在各个benchmark上的准确度表现，以及卷积神经网络的SOTA效果（BiT-L和Noisy
+Student）。可以看到，ViT-L/16经过JFT的与训练后，在各个benchmark上已经可以打败BiT-L了，虽然提升点不多，但是ViT-L/16训练的成本远远小于BiT-L；并且可以看到规模更大的ViT-H/14有更佳的表现，它的训练成本仍然小于BiT-L。</p>
+<p><img
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-45-29.png" /></p>
+<p><strong>预训练数据集规模要求</strong></p>
+<p>下图展示了在不同的预训练数据规模下得到的模型，迁移到ImageNet任务上的准确率。可以看到，预训练数据集百万级时，ViT的表现比BiT稍差，这是因为卷积网络本身包含归纳偏置，学习得比较快，而ViT需要learn
+from
+scratch，所以有过拟合。当预训练数据到千万级时，ViT和BiT的准确度分布差不多。当预训练数据到亿级时，ViT的准确度会高于BiT，并且更大规模的ViT效果更好。</p>
+<p><img
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-52-03.png" /></p>
+<p><strong>不同架构的性能与预训练计算成本比较</strong></p>
+<p>左图展示了ViT、卷积、和混合模型在不同的预训练计算成本下，在5个benchmark上的平均精度；右图单独展示了ImageNet上的精度。可以看到，但从计算成本上看，在同样的计算成本下，ViT一直能打败卷积网络；在计算成本相对较低时，混合模型的效果比ViT更好，但计算成本充分时，ViT也可以打败混合模型。（很有趣，卷积的归纳偏置在大规模预训练下可能是性能的约束）</p>
+<p><img
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-57-10.png" /></p>
+<h2 id="总结">5. 总结</h2>
+<p>文本提出了Vision
+Transformer，意在将Transformer直接应用于视觉领域。本文通过从image抽取patch，将image转成了一维的sequence
+of patch embeddings，并用Transformer
+Encoder解决图片分类问题，发现当预训练规模较小时，ViT略逊色于卷积网络，但当预训练规模较大时，ViT可以打败卷积网络，并且还没碰到性能天花板，有很好的scalability。</p>
+<p>未来方向：</p>
+<ol type="1">
+<li>Transformer在CV其他任务上的应用：目标识别、语义分割等</li>
+<li>在CV领域，用无监督来预训练Transformer：不仅统一模型，而且统一目标函数，完成CV和NLP的大一统</li>
+<li>探索ViT的scalability：继续扩大规模，性能提升如何</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://laaambs.github.io">Sunset</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://laaambs.github.io/2023/08/30/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/">https://laaambs.github.io/2023/08/30/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://laaambs.github.io" target="_blank">Sunset's Citywalk</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ViT/">ViT</a><a class="post-meta__tags" href="/tags/CV/">CV</a><a class="post-meta__tags" href="/tags/Transformer/">Transformer</a></div><div class="post_share"><div class="social-share" data-image="/images/cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/2023/08/26/BERT-Pre-training-of-Deep-Bidirectional-Transformers-for-Language-Understanding/" title="BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding"><img class="cover" src="/images/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/rabbit.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Sunset</div><div class="author-info__description">Fight for your faiytale.❤</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/laaambs"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/laaambs" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:894699297@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#an-image-is-worth-1616-words-transformers-for-image-recognition-at-scale"><span class="toc-text">An
+Image is Worth 16*16 Words: Transformers for Image Recognition at
+Scale</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E9%A2%98"><span class="toc-text">1. 标题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-text">2. 引言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#issue-motivation"><span class="toc-text">2.1 Issue &amp; Motivation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#contributions"><span class="toc-text">2.2 Contributions</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-text">3. 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA"><span class="toc-text">3.1 输入输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="toc-text">3.2 模型架构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-text">4. 实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE"><span class="toc-text">4.1 设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C-1"><span class="toc-text">4.2 实验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">5. 总结</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/images/cover.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 By Sunset</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

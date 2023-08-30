@@ -1,151 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>GAN: Generative Adversarial Nets</title>
-    <url>/2023/08/10/GAN-Generative-Adversarial-Nets/</url>
-    <content><![CDATA[<h1 id="gan-generative-adversarial-nets">GAN: Generative Adversarial
-Nets</h1>
-<h2 id="标题及作者">1. 标题及作者</h2>
+    <title>An Image is Worth 16*16 Words: Transformers for Image Recognition at Scale</title>
+    <url>/2023/08/30/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/</url>
+    <content><![CDATA[<h1
+id="an-image-is-worth-1616-words-transformers-for-image-recognition-at-scale">An
+Image is Worth 16*16 Words: Transformers for Image Recognition at
+Scale</h1>
+<h2 id="标题">1. 标题</h2>
 <ul>
-<li>模型的两大类：判别模型，生成模型
-<ul>
-<li>判别模型：预测、分类。</li>
-<li>生成模型：世界是通过采样不同的分布形成的，如果你要生成某个数据，就是要在它的分布上进行采样。所以生成模型的目标就是拟合到某种数据的分布。</li>
-</ul></li>
+<li>通过将image转换成sequence of “word
+embedding"，将Transformer直接应用于大规模的图片分类任务</li>
 </ul>
-<h2 id="摘要">2. 摘要</h2>
-<p>GAN是通过一个adversial
-process来预测生成模型。GAN会同时训练两个模型<span
-class="math inline">\(G\)</span>和<span
-class="math inline">\(D\)</span>，生成模型<span
-class="math inline">\(G\)</span>的目标是捕捉到真实的数据分布，判别模型<span
-class="math inline">\(D\)</span>的目标是分辨一个数据是否来自真实的数据分布。训练过程中，<span
-class="math inline">\(D\)</span>的目标是提高分类的准确率，<span
-class="math inline">\(G\)</span>的目标是最大化<span
-class="math inline">\(D\)</span>的错误率。最终使得<span
-class="math inline">\(G\)</span>找到真实的数据分布，即<span
-class="math inline">\(G\)</span>捕捉的数据分布与真实数据分布完全重合，此时<span
-class="math inline">\(D\)</span>对每个输入的预测都为0.5（等于随机预测）。用MLP来构建<span
-class="math inline">\(G\)</span>和<span
-class="math inline">\(D\)</span>，使用反向传播和梯度下降来训练这两个模型，而不使用传统的生成模型算法（如马尔科夫链）。</p>
-<h2 id="引言">3. 引言</h2>
-<h3 id="issue">3.1 Issue</h3>
+<h2 id="引言">2. 引言</h2>
+<h3 id="issue-motivation">2.1 Issue &amp; Motivation</h3>
+<p>注意力模块在NLP领域获得很大成功</p>
 <ul>
-<li>Discriminative model已经取得了很大进展</li>
-<li>但是Generative
-model还没有取得同样的进展，因为传统方法是要对未知的数据分布进行近似，然后计算似然函数。但是这种近似给计算带来了很多困难。</li>
-<li>不使用似然函数了，使用一个对抗策略的框架</li>
+<li><p>BERT等模型影响了NLP任务的解决模式：预训练大模型然后在任务具体数据集上做微调，这类方式开始占据主导（即统一了模型架构）</p></li>
+<li><p>由于注意力模型的scalability（可伸缩性）和computational
+efficiency（计算效率），有很多工作是围绕构建更大更深的注意力模型来展开，在更大规模的数据集上做训练，以获得更好的预训练模型。由于数据量和模型规模的增长，在NLP领域注意力模型的性能还没有够到天花板。</p></li>
 </ul>
-<h3 id="framework">3.2 Framework</h3>
+<p>另一方面，注意力模型在CV领域的应用还非常有限</p>
 <ul>
-<li><p>framework
-basisi就是双人对抗，同时训练两个模型，一个负责捕捉真是数据分布，一个负责分辨数据是否来自真实分布，直到生成模型找到真实分布。</p></li>
-<li><p>generative
-model：是一个MLP，输入是随机噪音（通常属于高斯分布），这个MLP可以将产生噪音的分布映射到我们想要的任何数据的分布上去</p></li>
-<li><p>discriminative
-model：也是一个MLP，输入一个数据，输出一个scalar，用于判别输入的数据是否来自真实数据分布</p></li>
-<li><p>以上这种G和D都是MLP的special case，称为adversarial
-nets，在adversarial
-nets下，可以利用误差的反向传播来训练模型，不需要对数据做复杂采样或对分布做复杂的近似。</p></li>
+<li>CV领域的主导模型仍然是卷积网络，因为卷积网络的Inductive
+bias包括了平移不变性和局部性，本质上就匹配视觉任务；而注意力模块是为了解决序列任务</li>
+<li>将注意力模块应用到CV会遇到<strong>计算复杂度</strong>的困难：注意力模块的计算复杂度是<span
+class="math inline">\(O(n^2)\)</span>，其中<span
+class="math inline">\(n\)</span>是指序列长度。而如果要对二维图像应用注意力模块，<strong>naive
+solution</strong>是对每个pixel去进行global
+attention，而一个低分辨率的<span
+class="math inline">\(224\times224\)</span>的图片也包含了<span
+class="math inline">\(50,176\)</span>个像素，注意力模块的计算复杂度就有<span
+class="math inline">\(O(50176^2)\)</span>，这对算力来说是不可接受的，更不要提高分辨率的图片</li>
+<li>有一些工作在尝试将注意力模块应用到CV任务，但不够彻底：1.
+部分工作是将卷积网络与注意力结合；2.
+还有一部分工作使用注意力模块完全替换卷积网络，但是使用的是经过特殊设计的注意力模块（如基于local
+window的Stand
+alone，以及基于轴注意力的网络），但这些注意力模块不能充分利用GPU等硬件算力，无法像NLP领域实现scalability</li>
 </ul>
-<h2 id="相关工作">4. 相关工作</h2>
+<p>因此，本文提出直接将Transformer应用于CV的图片分类任务</p>
 <ul>
-<li>曾经主流的方法是显式地构建目标数据的概率分布，概率分布中提供一些可学习的参数，然后根据数据样本通过最大化其对数似然函数来学习参数。例如，波兹曼机。
-<ul>
-<li>问题：当数据维度很高时，概率分布难以用最大似然函数来计算，因为计算非常困难；另外，真实数据的分布有时很难构造</li>
-</ul></li>
-<li>因此催生了另一类方法：generative
-machines，不再显式地构造概率分布，而是利用模型去近似概率分布。例如，VAE，NCE。
-<ul>
-<li>问题：不能知道数据分布的显式表达，但是可以利用反向传播、梯度下降来更新参数，使计算非常简单。</li>
-</ul></li>
+<li>通过将图片分隔为patches，对每个patch映射为一个linear
+embedding，从而将整个图片转换为一个sequence of
+embeddings，输入进Transformer（即直接将一张图片转成特征序列）</li>
+<li>使用有监督学习的方式用Transformer来处理图片分类任务</li>
 </ul>
-<h2 id="模型">5. 模型</h2>
-<ul>
-<li>generator <span class="math inline">\(G\)</span>:
-为了让生成器学习数据<span
-class="math inline">\(x\)</span>的分布（生成器学到的分布用<span
-class="math inline">\(p_g\)</span>表示），我们在输入噪音<span
-class="math inline">\(z\)</span>上定义一个先验分布<span
-class="math inline">\(p_z(z)\)</span>（一般是高斯分布），然后通过一个函数<span
-class="math inline">\(G(z;\theta_g)\)</span>表示从先验分布到目标分布的映射，其中<span
-class="math inline">\(G\)</span>是一个可微分函数，GAN中用MLP构建，其参数为<span
-class="math inline">\(\theta_g\)</span>
-<ul>
-<li>论文中是用scalar来表示<span class="math inline">\(z\)</span>和<span
-class="math inline">\(x\)</span>，在实际中，比如生成4k图像时，图像有八百万个像素，每个像素表示为一个随机变量，每个变量都服从一个分布，整个图像服从一个联合分布；如果隐向量<span
-class="math inline">\(z\)</span>设定为100维（超参数，根据生成数据的复杂度而选择，两者不需要相等），那么就需要初始化100个随机变量的分布；最终生成器就是一个初始输入为100维，最终输出为八百万维的MLP。</li>
-</ul></li>
-<li>discriminator <span class="math inline">\(D\)</span>:
-定义另一个MLP模型<span
-class="math inline">\(D(x;\theta_d)\)</span>，输入为数据<span
-class="math inline">\(x\)</span>，最终输出一个scalar，这个scalar表示<span
-class="math inline">\(x\)</span>来自真实数据分布的概率。</li>
-<li>loss function:
-<ul>
-<li>同时训练两个模型，对<span
-class="math inline">\(D\)</span>，我们希望它能尽可能地分辨正确<span
-class="math inline">\(x\)</span>是否来自真是数据分布；对<span
-class="math inline">\(G\)</span>，我们希望它生成的数据能尽可能地被<span
-class="math inline">\(D\)</span>判定为真实数据。</li>
-<li>损失函数：
-<ul>
-<li>先看内部对<span class="math inline">\(D\)</span>的max：当<span
-class="math inline">\(D\)</span>达到理想效果时，<span
-class="math inline">\(D(x)\)</span>为1，函数的第一部分为0，<span
-class="math inline">\(D(G(z))\)</span>为0，函数的第二部分为0，求和为0；如果不是理想效果，则函数结果为负。因此为了让<span
-class="math inline">\(D\)</span>达到理想效果，应该让函数尽可能大</li>
-<li>然后看外部对<span class="math inline">\(G\)</span>的min：与<span
-class="math inline">\(G\)</span>有关的只有函数的后一项，当<span
-class="math inline">\(G\)</span>达到理想效果时，<span
-class="math inline">\(D(G(z))\)</span>为1，则函数的后一项为负无穷，函数求和为负无穷。因此为了让<span
-class="math inline">\(G\)</span>达到理想效果，应该让函数尽可能小</li>
-<li>损失函数公式如下所示：</li>
-</ul></li>
-</ul></li>
-</ul>
+<h3 id="contributions">2.2 Contributions</h3>
+<ol type="1">
+<li><p>通过将图片转换为特征序列，直接将Transformer模型应用于CV的分类任务</p></li>
+<li><p>Vision
+Transformer在中规模的数据集上，效果discouraging：比相同大小的ResNet的准确率低几个百分点（因为CNN本身包含inductive
+bias，而注意力只能靠学习）；然而，<strong>在更大规模的数据集上，Vision
+Transformer会打败CNN的inductive
+bias</strong>，在多个数据集上都可以取得SOTA的效果，并且迁移到下游任务时只需要更少的数据。</p></li>
+</ol>
+<h2 id="方法">3. 方法</h2>
 <p><img
-src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-24-06.png" /></p>
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-08-59.png" /></p>
+<h3 id="输入输出">3.1 输入输出</h3>
+<p><strong>1. Patches Extraction</strong></p>
 <ul>
-<li>学习过程：
-<ul>
-<li>如图所示，初始时<span class="math inline">\(D\)</span>和<span
-class="math inline">\(G\)</span>的效果都有较大偏差。随后在每次迭代中，<span
-class="math inline">\(D\)</span>先优化，学到真实数据和<span
-class="math inline">\(G\)</span>生成数据的区别；然后<span
-class="math inline">\(G\)</span>优化数据分布，减小<span
-class="math inline">\(D\)</span>的分类准确率。经过多次迭代后，<span
-class="math inline">\(G\)</span>生成数据的分布和真实数据分布完全重合。</li>
-</ul></li>
+<li>将图片划分成大小相等的patches，然后将patch拉平为向量，输入进可训练的全连接层，得到patch
+embedding</li>
 </ul>
+<p><strong>2. Classification Token</strong></p>
+<ul>
+<li>类似于BERT的[class]，我们在sequence of patch
+embeddings的前面准备一个同样大小的embedding，它在Transformer
+Encoder最后输出的对应状态就作为整个图片的语义表示，然后输入进分类头，进行分类</li>
+</ul>
+<p><strong>3. Postion Embedding</strong></p>
+<ul>
+<li>与BERT一样，我们也要对输入embedding加上position
+embedding。需要注意的是，随着图像分辨率和patch_size设置的不同，输入序列的长度也会发生变化（比如9宫格变成25宫格），那么position
+embedding也需要重新学习（虽然可以通过插值来缓解），这一点也是ViT的局限之一</li>
+</ul>
+<h3 id="模型架构">3.2 模型架构</h3>
+<p>ViT使用的完全与Transformer Encoder一样，只是在每个Encoder
+Layer里，laynorm放在block的前面。公式描述如下：</p>
 <p><img
-src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-38-27.png" /></p>
-<ul>
-<li>算法描述：</li>
-</ul>
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-35-30.png" /></p>
+<h2 id="实验">4. 实验</h2>
+<h3 id="设置">4.1 设置</h3>
+<p><strong>数据集</strong></p>
+<p>使用了三个不同规模的数据集做预训练：百万级的ImageNet，千万级的ImageNet-21k，以及亿级的JFT；使用了分类任务多个benchmark做微调：ImageNet，CIFAR
+10，CIFAR 100，Oxford-IIIT Pets，Oxford
+Flowers-102和VTAB（主要用于测试模型稳健性）</p>
+<p><strong>模型</strong></p>
+<p>使用了卷积模型（多种ResNet），ViT（不同规模）和hybrid模型（前面卷积后面ViT）</p>
 <p><img
-src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-39-19.png" /></p>
-<h2 id="优缺点">6. 优缺点</h2>
-<ul>
-<li><p>GAN不需要显式地表示数据分布，因而可以利用网络模型拟合非常复杂的数据，计算上也方便很多</p></li>
-<li><p>GAN的训练非常不稳定，因为它需要每次迭代中<span
-class="math inline">\(G\)</span>和<span
-class="math inline">\(D\)</span>的能力相当，不能某个模型的能力过强，否则另一个模型无法收敛；但要求每次迭代时<span
-class="math inline">\(D\)</span>要在当前的<span
-class="math inline">\(G\)</span>模型下分辨能力有优化，否则<span
-class="math inline">\(G\)</span>也无法学到很好的分布；另外，GAN的训练不需要推理，<span
-class="math inline">\(D\)</span>和<span
-class="math inline">\(G\)</span>两个模型是否都收敛了比较难判断。</p></li>
-<li><p>GAN是半监督学习的灵感之一，因为它的数据生成是无监督的，即数据不需要标记；但损失函数是有监督的，唯一的监督信息是数据来源于真实数据分布还是生成器，而这个监督信息是训练时自己定义的。</p></li>
-</ul>
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-38-22.png" /></p>
+<h3 id="实验-1">4.2 实验</h3>
+<p><strong>Benchmark上的SOTA比较</strong></p>
+<p>下表是不同规模的ViT经过不同规模的与训练后在各个benchmark上的准确度表现，以及卷积神经网络的SOTA效果（BiT-L和Noisy
+Student）。可以看到，ViT-L/16经过JFT的与训练后，在各个benchmark上已经可以打败BiT-L了，虽然提升点不多，但是ViT-L/16训练的成本远远小于BiT-L；并且可以看到规模更大的ViT-H/14有更佳的表现，它的训练成本仍然小于BiT-L。</p>
+<p><img
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-45-29.png" /></p>
+<p><strong>预训练数据集规模要求</strong></p>
+<p>下图展示了在不同的预训练数据规模下得到的模型，迁移到ImageNet任务上的准确率。可以看到，预训练数据集百万级时，ViT的表现比BiT稍差，这是因为卷积网络本身包含归纳偏置，学习得比较快，而ViT需要learn
+from
+scratch，所以有过拟合。当预训练数据到千万级时，ViT和BiT的准确度分布差不多。当预训练数据到亿级时，ViT的准确度会高于BiT，并且更大规模的ViT效果更好。</p>
+<p><img
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-52-03.png" /></p>
+<p><strong>不同架构的性能与预训练计算成本比较</strong></p>
+<p>左图展示了ViT、卷积、和混合模型在不同的预训练计算成本下，在5个benchmark上的平均精度；右图单独展示了ImageNet上的精度。可以看到，但从计算成本上看，在同样的计算成本下，ViT一直能打败卷积网络；在计算成本相对较低时，混合模型的效果比ViT更好，但计算成本充分时，ViT也可以打败混合模型。（很有趣，卷积的归纳偏置在大规模预训练下可能是性能的约束）</p>
+<p><img
+src="/images/blogs/An-Image-is-Worth-16-16-Words-Transformers-for-Image-Recognition-at-Scale/Snipaste_2023-08-30_12-57-10.png" /></p>
+<h2 id="总结">5. 总结</h2>
+<p>文本提出了Vision
+Transformer，意在将Transformer直接应用于视觉领域。本文通过从image抽取patch，将image转成了一维的sequence
+of patch embeddings，并用Transformer
+Encoder解决图片分类问题，发现当预训练规模较小时，ViT略逊色于卷积网络，但当预训练规模较大时，ViT可以打败卷积网络，并且还没碰到性能天花板，有很好的scalability。</p>
+<p>未来方向：</p>
+<ol type="1">
+<li>Transformer在CV其他任务上的应用：目标识别、语义分割等</li>
+<li>在CV领域，用无监督来预训练Transformer：不仅统一模型，而且统一目标函数，完成CV和NLP的大一统</li>
+<li>探索ViT的scalability：继续扩大规模，性能提升如何</li>
+</ol>
 ]]></content>
       <categories>
         <category>沐神开组会</category>
       </categories>
       <tags>
-        <tag>GAN</tag>
-        <tag>李沐</tag>
+        <tag>ViT</tag>
+        <tag>CV</tag>
+        <tag>Transformer</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Attention Is All You Need</title>
+    <url>/2023/08/18/Attention-Is-All-You-Need/</url>
+    <content><![CDATA[
+]]></content>
   </entry>
   <entry>
     <title>BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</title>
@@ -289,12 +275,6 @@ LM使模型能够利用上下文信息，从而得到更好的token级的特征�
       </tags>
   </entry>
   <entry>
-    <title>Attention Is All You Need</title>
-    <url>/2023/08/18/Attention-Is-All-You-Need/</url>
-    <content><![CDATA[
-]]></content>
-  </entry>
-  <entry>
     <title>CV上分思路和技巧</title>
     <url>/2023/08/11/CV%E4%B8%8A%E5%88%86%E6%80%9D%E8%B7%AF%E5%92%8C%E6%8A%80%E5%B7%A7/</url>
     <content><![CDATA[<h1 id="cv上分思路和技巧">CV上分思路和技巧</h1>
@@ -356,6 +336,153 @@ src="/images/blogs/CV上分思路和技巧/Snipaste_2023-08-11_14-04-50.png" /><
       <tags>
         <tag>炼丹</tag>
         <tag>比赛</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>GAN: Generative Adversarial Nets</title>
+    <url>/2023/08/10/GAN-Generative-Adversarial-Nets/</url>
+    <content><![CDATA[<h1 id="gan-generative-adversarial-nets">GAN: Generative Adversarial
+Nets</h1>
+<h2 id="标题及作者">1. 标题及作者</h2>
+<ul>
+<li>模型的两大类：判别模型，生成模型
+<ul>
+<li>判别模型：预测、分类。</li>
+<li>生成模型：世界是通过采样不同的分布形成的，如果你要生成某个数据，就是要在它的分布上进行采样。所以生成模型的目标就是拟合到某种数据的分布。</li>
+</ul></li>
+</ul>
+<h2 id="摘要">2. 摘要</h2>
+<p>GAN是通过一个adversial
+process来预测生成模型。GAN会同时训练两个模型<span
+class="math inline">\(G\)</span>和<span
+class="math inline">\(D\)</span>，生成模型<span
+class="math inline">\(G\)</span>的目标是捕捉到真实的数据分布，判别模型<span
+class="math inline">\(D\)</span>的目标是分辨一个数据是否来自真实的数据分布。训练过程中，<span
+class="math inline">\(D\)</span>的目标是提高分类的准确率，<span
+class="math inline">\(G\)</span>的目标是最大化<span
+class="math inline">\(D\)</span>的错误率。最终使得<span
+class="math inline">\(G\)</span>找到真实的数据分布，即<span
+class="math inline">\(G\)</span>捕捉的数据分布与真实数据分布完全重合，此时<span
+class="math inline">\(D\)</span>对每个输入的预测都为0.5（等于随机预测）。用MLP来构建<span
+class="math inline">\(G\)</span>和<span
+class="math inline">\(D\)</span>，使用反向传播和梯度下降来训练这两个模型，而不使用传统的生成模型算法（如马尔科夫链）。</p>
+<h2 id="引言">3. 引言</h2>
+<h3 id="issue">3.1 Issue</h3>
+<ul>
+<li>Discriminative model已经取得了很大进展</li>
+<li>但是Generative
+model还没有取得同样的进展，因为传统方法是要对未知的数据分布进行近似，然后计算似然函数。但是这种近似给计算带来了很多困难。</li>
+<li>不使用似然函数了，使用一个对抗策略的框架</li>
+</ul>
+<h3 id="framework">3.2 Framework</h3>
+<ul>
+<li><p>framework
+basisi就是双人对抗，同时训练两个模型，一个负责捕捉真是数据分布，一个负责分辨数据是否来自真实分布，直到生成模型找到真实分布。</p></li>
+<li><p>generative
+model：是一个MLP，输入是随机噪音（通常属于高斯分布），这个MLP可以将产生噪音的分布映射到我们想要的任何数据的分布上去</p></li>
+<li><p>discriminative
+model：也是一个MLP，输入一个数据，输出一个scalar，用于判别输入的数据是否来自真实数据分布</p></li>
+<li><p>以上这种G和D都是MLP的special case，称为adversarial
+nets，在adversarial
+nets下，可以利用误差的反向传播来训练模型，不需要对数据做复杂采样或对分布做复杂的近似。</p></li>
+</ul>
+<h2 id="相关工作">4. 相关工作</h2>
+<ul>
+<li>曾经主流的方法是显式地构建目标数据的概率分布，概率分布中提供一些可学习的参数，然后根据数据样本通过最大化其对数似然函数来学习参数。例如，波兹曼机。
+<ul>
+<li>问题：当数据维度很高时，概率分布难以用最大似然函数来计算，因为计算非常困难；另外，真实数据的分布有时很难构造</li>
+</ul></li>
+<li>因此催生了另一类方法：generative
+machines，不再显式地构造概率分布，而是利用模型去近似概率分布。例如，VAE，NCE。
+<ul>
+<li>问题：不能知道数据分布的显式表达，但是可以利用反向传播、梯度下降来更新参数，使计算非常简单。</li>
+</ul></li>
+</ul>
+<h2 id="模型">5. 模型</h2>
+<ul>
+<li>generator <span class="math inline">\(G\)</span>:
+为了让生成器学习数据<span
+class="math inline">\(x\)</span>的分布（生成器学到的分布用<span
+class="math inline">\(p_g\)</span>表示），我们在输入噪音<span
+class="math inline">\(z\)</span>上定义一个先验分布<span
+class="math inline">\(p_z(z)\)</span>（一般是高斯分布），然后通过一个函数<span
+class="math inline">\(G(z;\theta_g)\)</span>表示从先验分布到目标分布的映射，其中<span
+class="math inline">\(G\)</span>是一个可微分函数，GAN中用MLP构建，其参数为<span
+class="math inline">\(\theta_g\)</span>
+<ul>
+<li>论文中是用scalar来表示<span class="math inline">\(z\)</span>和<span
+class="math inline">\(x\)</span>，在实际中，比如生成4k图像时，图像有八百万个像素，每个像素表示为一个随机变量，每个变量都服从一个分布，整个图像服从一个联合分布；如果隐向量<span
+class="math inline">\(z\)</span>设定为100维（超参数，根据生成数据的复杂度而选择，两者不需要相等），那么就需要初始化100个随机变量的分布；最终生成器就是一个初始输入为100维，最终输出为八百万维的MLP。</li>
+</ul></li>
+<li>discriminator <span class="math inline">\(D\)</span>:
+定义另一个MLP模型<span
+class="math inline">\(D(x;\theta_d)\)</span>，输入为数据<span
+class="math inline">\(x\)</span>，最终输出一个scalar，这个scalar表示<span
+class="math inline">\(x\)</span>来自真实数据分布的概率。</li>
+<li>loss function:
+<ul>
+<li>同时训练两个模型，对<span
+class="math inline">\(D\)</span>，我们希望它能尽可能地分辨正确<span
+class="math inline">\(x\)</span>是否来自真是数据分布；对<span
+class="math inline">\(G\)</span>，我们希望它生成的数据能尽可能地被<span
+class="math inline">\(D\)</span>判定为真实数据。</li>
+<li>损失函数：
+<ul>
+<li>先看内部对<span class="math inline">\(D\)</span>的max：当<span
+class="math inline">\(D\)</span>达到理想效果时，<span
+class="math inline">\(D(x)\)</span>为1，函数的第一部分为0，<span
+class="math inline">\(D(G(z))\)</span>为0，函数的第二部分为0，求和为0；如果不是理想效果，则函数结果为负。因此为了让<span
+class="math inline">\(D\)</span>达到理想效果，应该让函数尽可能大</li>
+<li>然后看外部对<span class="math inline">\(G\)</span>的min：与<span
+class="math inline">\(G\)</span>有关的只有函数的后一项，当<span
+class="math inline">\(G\)</span>达到理想效果时，<span
+class="math inline">\(D(G(z))\)</span>为1，则函数的后一项为负无穷，函数求和为负无穷。因此为了让<span
+class="math inline">\(G\)</span>达到理想效果，应该让函数尽可能小</li>
+<li>损失函数公式如下所示：</li>
+</ul></li>
+</ul></li>
+</ul>
+<p><img
+src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-24-06.png" /></p>
+<ul>
+<li>学习过程：
+<ul>
+<li>如图所示，初始时<span class="math inline">\(D\)</span>和<span
+class="math inline">\(G\)</span>的效果都有较大偏差。随后在每次迭代中，<span
+class="math inline">\(D\)</span>先优化，学到真实数据和<span
+class="math inline">\(G\)</span>生成数据的区别；然后<span
+class="math inline">\(G\)</span>优化数据分布，减小<span
+class="math inline">\(D\)</span>的分类准确率。经过多次迭代后，<span
+class="math inline">\(G\)</span>生成数据的分布和真实数据分布完全重合。</li>
+</ul></li>
+</ul>
+<p><img
+src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-38-27.png" /></p>
+<ul>
+<li>算法描述：</li>
+</ul>
+<p><img
+src="/images/blogs/GAN-Generative-Adversarial-Nets/Snipaste_2023-08-10_21-39-19.png" /></p>
+<h2 id="优缺点">6. 优缺点</h2>
+<ul>
+<li><p>GAN不需要显式地表示数据分布，因而可以利用网络模型拟合非常复杂的数据，计算上也方便很多</p></li>
+<li><p>GAN的训练非常不稳定，因为它需要每次迭代中<span
+class="math inline">\(G\)</span>和<span
+class="math inline">\(D\)</span>的能力相当，不能某个模型的能力过强，否则另一个模型无法收敛；但要求每次迭代时<span
+class="math inline">\(D\)</span>要在当前的<span
+class="math inline">\(G\)</span>模型下分辨能力有优化，否则<span
+class="math inline">\(G\)</span>也无法学到很好的分布；另外，GAN的训练不需要推理，<span
+class="math inline">\(D\)</span>和<span
+class="math inline">\(G\)</span>两个模型是否都收敛了比较难判断。</p></li>
+<li><p>GAN是半监督学习的灵感之一，因为它的数据生成是无监督的，即数据不需要标记；但损失函数是有监督的，唯一的监督信息是数据来源于真实数据分布还是生成器，而这个监督信息是训练时自己定义的。</p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>沐神开组会</category>
+      </categories>
+      <tags>
+        <tag>李沐</tag>
+        <tag>GAN</tag>
       </tags>
   </entry>
   <entry>
